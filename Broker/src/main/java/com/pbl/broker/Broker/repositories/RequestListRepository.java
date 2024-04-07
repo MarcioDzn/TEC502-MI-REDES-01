@@ -13,11 +13,14 @@ public class RequestListRepository {
         while (true) {
             if (queue.size() > 0) {
                 RequestModel request = queue.get(0);
+                String ip = request.getIp();
 
                 String message = request.getCommand() + " " + request.getContent();
 
-                // verificar depois se o sensor tá conectado pra mandar (talvez)
-                SocketServer.sendMessageToClient(request.getIp(), message);
+                SocketServer.sendMessageToClient(ip, message);
+                String response = SocketServer.receiveMessage(ip);
+                ResponseRepository.addResponse(ip, response);
+
                 queue.remove(0);
             }
 
