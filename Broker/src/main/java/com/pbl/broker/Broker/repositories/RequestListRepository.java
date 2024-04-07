@@ -15,7 +15,7 @@ public class RequestListRepository {
                 RequestModel request = queue.get(0);
                 String ip = request.getIp();
 
-                String message = request.getCommand() + " " + request.getContent();
+                String message = request.getCommand();
 
                 SocketServer.sendMessageToClient(ip, message);
                 String response = SocketServer.receiveMessage(ip);

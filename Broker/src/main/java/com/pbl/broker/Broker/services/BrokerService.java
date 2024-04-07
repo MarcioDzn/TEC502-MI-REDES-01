@@ -14,7 +14,7 @@ public class BrokerService {
         if (ConnectedDevicesRepository.getDevice("127.0.0.1") == null) {
             response = command + " " + "Dispositivo_não_encontrado";
         } else {
-            RequestListRepository.addToQueue(new RequestModel("127.0.0.1", "Teste", "Content"));
+            RequestListRepository.addToQueue(new RequestModel("127.0.0.1", "get_time", "Content"));
             response = command + " enviado!";
         }
 
@@ -24,14 +24,13 @@ public class BrokerService {
     public List<String> getSensorResponse(Long id) {
         String response = ResponseRepository.getResponse("127.0.0.1");
 
-        String format_response = "a " + response;;
         if (response == null) {
-            format_response = "a error";
+            response = "a error";
 
         } else if (response.equals("error")) {
             ConnectedDevicesRepository.removeDevice("127.0.0.1");
         }
 
-        return List.of(format_response.split(" "));
+        return List.of(response.split(" "));
     }
 }
