@@ -3,6 +3,7 @@ from datetime import date
 
 class Client:
     def __init__(self, address):
+        self.online = True
         self.address = address
         self.client_sock_tcp = self.initialize_client_tcp()
 
@@ -10,7 +11,27 @@ class Client:
     def get_time(self):
         current_time = date.today()
         return current_time
+    
 
+    def handle_requests(self, request):
+        if request == "turn_on":
+            self.online = True
+            response = f"{request} ligado"
+
+        elif not self.online:
+            return f"{request} dispositivo_esta_desligado"
+
+        elif request == "get_time":
+            response = f"{request} {self.get_time()}"
+
+        elif request == "turn_off":
+            self.online = False
+            response = f"{request} desligado"
+
+        else:
+            response = f"{request} comando_invalido"
+
+        return response
 
 
     def initialize_client_tcp(self):
@@ -24,20 +45,15 @@ class Client:
     def receive_data(self):
         while True:
             try:
-                response = self.client_sock_tcp.recv(1024).decode().strip()
+                request = self.client_sock_tcp.recv(1024).decode().strip()
 
-                if not response:
+                if not request:
                     break
                 
-                if response == "get_time":
-                    data = f"{response} {self.get_time()}"
+                
+                response = self.handle_requests(request)
 
-                else:
-                    data = f"{response} comando_invalido"
-
-
-                print(data)
-                self.send_data(data)
+                self.send_response(response)
 
             except ConnectionResetError:
                 print("Conexão com o servidor foi encerrada.")
@@ -50,11 +66,11 @@ class Client:
         self.client_sock_tcp.close()    
 
 
-    def send_data(self, data):
+    def send_response(self, response):
         try:
             client_sock_udp = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
             client_sock_udp.connect((self.address[0], self.address[1] + 2000)) # porta 5000
-            client_sock_udp.sendall(data.encode())
+            client_sock_udp.sendall(response.encode())
             
             client_sock_udp.close()
 
