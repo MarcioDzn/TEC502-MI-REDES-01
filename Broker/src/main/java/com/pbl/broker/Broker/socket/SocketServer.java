@@ -83,8 +83,6 @@ public class SocketServer {
                 throw new RuntimeException(e);
 
             } catch (SocketTimeoutException e) {
-
-                // remove da lista de dispositivos conectados se passar muito tempo sem responder
                 return "error";
 
             } catch (IOException e) {
