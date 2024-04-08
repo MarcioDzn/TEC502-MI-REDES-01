@@ -12,9 +12,9 @@ public class BrokerService {
     public List<String> sendRequest(Long id, String command) {
         String response;
         if (ConnectedDevicesRepository.getDevice("127.0.0.1") == null) {
-            response = command + " " + "Dispositivo_não_encontrado";
+            response = command + " " + "dispositivo_não_encontrado";
         } else {
-            RequestListRepository.addToQueue(new RequestModel("127.0.0.1", command, "Content"));
+            RequestListRepository.addToQueue(new RequestModel("127.0.0.1", command));
             response = command + " enviado!";
         }
 

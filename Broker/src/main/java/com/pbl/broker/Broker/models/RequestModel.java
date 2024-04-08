@@ -12,5 +12,4 @@ import lombok.Setter;
 public class RequestModel {
     public String ip;
     public String command;
-    public String content;
 }

@@ -13,8 +13,8 @@ public class BrokerController {
     BrokerService service = new BrokerService();
 
     @PostMapping("/{id}")
-    public ResponseEntity<SensorModel> sendRequest(@PathVariable Long id) {
-        List<String> response = service.sendRequest(id, "get_time");
+    public ResponseEntity<SensorModel> sendRequest(@PathVariable Long id, @RequestBody SensorModel data) {
+        List<String> response = service.sendRequest(id, data.getCommand());
 
         SensorModel sensor = new SensorModel(response.get(0), response.get(1));
         return ResponseEntity.ok(sensor);
