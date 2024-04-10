@@ -1,5 +1,5 @@
 import socket, threading, utils
-from Device import *
+from AirConditioner import *
 
 class Client:
 
@@ -58,7 +58,7 @@ class Client:
                 print("Erro durante o envio de dados:", e)
 
 
-device = Device("Temperatura")
+device = AirConditioner("Temperatura")
 client = Client(("localhost", 3000), device)
 
 threading.Thread(target=client.send_response, name="udp_sender").start()
