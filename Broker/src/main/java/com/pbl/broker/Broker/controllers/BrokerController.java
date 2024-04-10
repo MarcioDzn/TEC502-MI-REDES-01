@@ -1,30 +1,27 @@
 package com.pbl.broker.Broker.controllers;
 
-import com.pbl.broker.Broker.models.SensorModel;
+import com.pbl.broker.Broker.models.RequestModel;
+import com.pbl.broker.Broker.models.ResponseModel;
 import com.pbl.broker.Broker.services.BrokerService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/sensor")
 public class BrokerController {
     BrokerService service = new BrokerService();
 
-    @PostMapping("/{id}")
-    public ResponseEntity<SensorModel> sendRequest(@PathVariable Long id, @RequestBody SensorModel data) {
-        List<String> response = service.sendRequest(id, data.getCommand());
+    @GetMapping("/{id}")
+    public ResponseEntity<ResponseModel> getSensorContinuousResponse() {
+        ResponseModel response = service.getSensorContinuousResponse();
 
-        SensorModel sensor = new SensorModel(response.get(0), response.get(1));
-        return ResponseEntity.ok(sensor);
+        return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<SensorModel> getSensorResponse(@PathVariable Long id) {
-        List<String> response = service.getSensorResponse(id);
+    @PostMapping("/{id}")
+    public ResponseEntity sendSensorReq(@RequestBody RequestModel request) {
+        service.sendSensorReq(request.getCommand());
 
-        SensorModel sensor = new SensorModel(response.get(0), response.get(1));
-        return ResponseEntity.ok(sensor);
+        return ResponseEntity.ok().build();
     }
 }

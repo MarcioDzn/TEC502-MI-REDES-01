@@ -18,8 +18,8 @@ public class RequestListRepository {
                 String message = request.getCommand();
 
                 SocketServer.sendMessageToClient(ip, message);
-                String response = SocketServer.receiveMessage(ip);
-                ResponseRepository.addResponse(ip, response);
+//                String response = SocketServer.receiveUDPMessage();
+//                ResponseRepository.addResponse(ip, response);
 
                 queue.remove(0);
             }

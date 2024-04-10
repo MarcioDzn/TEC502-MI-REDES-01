@@ -1,21 +1,20 @@
 package com.pbl.broker.Broker.repositories;
 
+import com.pbl.broker.Broker.models.ResponseModel;
+
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ResponseRepository {
-    private static Map<String, String> responses = new HashMap<>();
+    private static Map<String, ResponseModel> responses = new HashMap<>();
 
-    public static void addResponse(String ip, String response) {
+    public static void addResponse(String ip, ResponseModel response) {
         responses.put(ip, response);
     }
 
-    public static String getResponse(String ip) {
-        String response = responses.get(ip);
-
-        // a response deve ser removida da lista quando é buscada
-        removeResponse(ip);
+    public static ResponseModel getResponse(String ip) {
+        ResponseModel response = responses.get(ip);
 
         return response;
     }

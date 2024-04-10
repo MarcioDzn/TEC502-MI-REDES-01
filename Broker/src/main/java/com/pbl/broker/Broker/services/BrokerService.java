@@ -1,38 +1,20 @@
 package com.pbl.broker.Broker.services;
 
-import com.pbl.broker.Broker.models.RequestModel;
-import com.pbl.broker.Broker.repositories.ConnectedDevicesRepository;
-import com.pbl.broker.Broker.repositories.RequestListRepository;
+import com.pbl.broker.Broker.models.ResponseModel;
 import com.pbl.broker.Broker.repositories.ResponseRepository;
 import com.pbl.broker.Broker.socket.SocketServer;
 
 import java.util.List;
 
 public class BrokerService {
-    public List<String> sendRequest(Long id, String command) {
-        String response;
-        if (ConnectedDevicesRepository.getDevice("127.0.0.1") == null) {
-            response = command + " " + "dispositivo_não_encontrado";
-        } else {
-            RequestListRepository.addToQueue(new RequestModel("127.0.0.1", command));
-            response = command + " enviado!";
-        }
+    public ResponseModel getSensorContinuousResponse() {
+        ResponseModel response = ResponseRepository.getResponse("127.0.0.1");
 
-        return List.of(response.split(" "));
+        return response;
     }
 
-    public List<String> getSensorResponse(Long id) {
-        String response = ResponseRepository.getResponse("127.0.0.1");
+    public void sendSensorReq(String command) {
+        SocketServer.sendMessageToClient("127.0.0.1", command);
 
-        System.out.println(response);
-        if (response == null) {
-            response = "a error";
-
-        } else if (response.equals("error")) {
-            ConnectedDevicesRepository.removeDevice("127.0.0.1");
-            response = "a error";
-        }
-
-        return List.of(response.split(" "));
     }
 }

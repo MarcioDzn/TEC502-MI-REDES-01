@@ -19,13 +19,19 @@ public class BrokerApplication extends Thread{
 
 	public void run() {
 		// Executa RequestListRepository.dispatchRequest() em uma thread separada
-		new Thread(() -> {
-			RequestListRepository.dispatchRequest();
-		}).start();
+//		new Thread(() -> {
+//			RequestListRepository.dispatchRequest();
+//		}).start();
 
 		// inicia o servidor
 		SocketServer.startServer();
+		new Thread(() -> {
+			SocketServer.receiveUDPMessage();
+		}).start();
 		SocketServer.waitClientsConnection();
+
+
+
 
 
 	}
