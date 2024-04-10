@@ -7,14 +7,23 @@ import com.pbl.broker.Broker.socket.SocketServer;
 import java.util.List;
 
 public class BrokerService {
-    public ResponseModel getSensorContinuousResponse() {
-        ResponseModel response = ResponseRepository.getResponse("127.0.0.1");
+    public List<ResponseModel> getAllSensorContinuousResponse() {
+        List<ResponseModel> response = ResponseRepository.getAllResponse();
 
         return response;
     }
 
-    public void sendSensorReq(String command) {
-        SocketServer.sendMessageToClient("127.0.0.1", command);
+    public ResponseModel getSensorContinuousResponse(Long id) {
+        ResponseModel response = ResponseRepository.getResponseById(id);
+
+        return response;
+    }
+
+    public void sendSensorReq(Long id, String command) {
+        String address = ResponseRepository.getKeyItem(id);
+        System.out.println(address);
+
+        SocketServer.sendMessageToClient(address, command);
 
     }
 }
