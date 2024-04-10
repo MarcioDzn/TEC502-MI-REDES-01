@@ -1,59 +1,26 @@
-import socket
-from datetime import date
+import socket, threading, utils
+from Device import *
 
 class Client:
-    def __init__(self, address):
-        self.online = True
+
+
+    def __init__(self, address, device):
         self.address = address
-        self.client_sock_tcp = self.initialize_client_tcp()
-
-    
-    def get_time(self):
-        current_time = date.today()
-        return current_time
-    
-
-    def handle_requests(self, request):
-        if request == "turn_on":
-            self.online = True
-            response = f"{request} ligado"
-
-        elif not self.online:
-            return f"{request} dispositivo_esta_desligado"
-
-        elif request == "get_time":
-            response = f"{request} {self.get_time()}"
-
-        elif request == "turn_off":
-            self.online = False
-            response = f"{request} desligado"
-
-        else:
-            response = f"{request} comando_invalido"
-
-        return response
-
-
-    def initialize_client_tcp(self):
-        client_sock_tcp = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-        client_sock_tcp.connect(self.address)
-
-        return client_sock_tcp
+        self.device = device
 
 
     def receive_data(self):
+        client_sock_tcp = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        client_sock_tcp.connect(self.address)
+
         while True:
             try:
-                request = self.client_sock_tcp.recv(1024).decode().strip()
+                request = client_sock_tcp.recv(1024).decode().strip()
 
                 if not request:
                     break
                 
-                
-                response = self.handle_requests(request)
-
-                self.send_response(response)
+                self.device.handle_requests(request)
 
             except ConnectionResetError:
                 print("Conexão com o servidor foi encerrada.")
@@ -63,21 +30,37 @@ class Client:
                 print("Erro durante a recepção de dados:", e)
                 break
 
-        self.client_sock_tcp.close()    
+        client_sock_tcp.close()    
 
 
-    def send_response(self, response):
-        try:
-            client_sock_udp = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-            client_sock_udp.connect((self.address[0], self.address[1] + 2000)) # porta 5000
-            client_sock_udp.sendall(response.encode())
-            
-            client_sock_udp.close()
+    def send_response(self):
+        client_sock_udp = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        client_sock_udp.connect((self.address[0], self.address[1] + 2000)) # porta 5000
 
-        except Exception as e:
-            print("Erro durante o envio de dados:", e)
+        while True:
+            try:
+                data = str(self.device.get_data())
+                time = utils.get_current_time()
+
+                if self.device.online:
+                    sent_off_message = False
+                    response = f"{self.device.name} {time} {data}"
+
+                    client_sock_udp.sendall(response.encode())
+
+                else:
+                    response = f"{self.device.name} {time} offline"
+                    if not sent_off_message:
+                        client_sock_udp.sendall(response.encode())
+                    sent_off_message = True
+
+            except Exception as e:
+                print("Erro durante o envio de dados:", e)
 
 
-client = Client(("localhost", 3000))
+device = Device("Temperatura")
+client = Client(("localhost", 3000), device)
 
+threading.Thread(target=client.send_response, name="udp_sender").start()
 client.receive_data()
+
