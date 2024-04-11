@@ -48,19 +48,22 @@ class Client:
 
                     client_sock_udp.sendall(response.encode())
 
+
                 else:
                     response = f"{self.device.name} {time} offline"
                     if not sent_off_message:
                         client_sock_udp.sendall(response.encode())
                     sent_off_message = True
 
+
+
             except Exception as e:
                 print("Erro durante o envio de dados:", e)
 
 
-device = AirConditioner("Temperatura")
-client = Client(("localhost", 3000), device)
+# device = AirConditioner("Temperatura")
+# client = Client(("localhost", 3000), device)
 
-threading.Thread(target=client.send_response, name="udp_sender").start()
-client.receive_data()
+# threading.Thread(target=client.send_response, name="udp_sender").start()
+# client.receive_data()
 
