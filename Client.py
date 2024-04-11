@@ -1,5 +1,6 @@
 import socket, threading, utils
 from AirConditioner import *
+from time import sleep
 
 class Client:
 
@@ -41,6 +42,8 @@ class Client:
             try:
                 data = str(self.device.get_data())
                 time = utils.get_current_time()
+
+                sleep(0.5) # 0.5 segundos de espera
 
                 if self.device.online:
                     sent_off_message = False
