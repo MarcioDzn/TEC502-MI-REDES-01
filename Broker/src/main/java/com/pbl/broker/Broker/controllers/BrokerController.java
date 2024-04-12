@@ -27,7 +27,7 @@ public class BrokerController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity sendSensorReq(@PathVariable Long id, @RequestBody RequestModel request) {
         service.sendSensorReq(id, request.getCommand());
 
