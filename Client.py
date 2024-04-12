@@ -39,7 +39,6 @@ class Client:
                 self.device.handle_requests(request)
 
             except ConnectionResetError:
-                # print("Conexão com o servidor foi encerrada.")
                 server_on = False
 
             except Exception as e:
@@ -60,14 +59,15 @@ class Client:
 
                 sleep(0.5) # 0.5 segundos de espera
 
-                if self.device.online:
+                if self.device.status == "online":
                     sent_off_message = False
                     response = f"{self.device.name} {time} {data}"
                     client_sock_udp.sendall(response.encode())
 
 
-                else:
+                elif self.device.status == "offline":
                     response = f"{self.device.name} {time} offline"
+
                     if not sent_off_message:
                         client_sock_udp.sendall(response.encode())
                     sent_off_message = True
