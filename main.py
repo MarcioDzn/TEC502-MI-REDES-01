@@ -10,7 +10,8 @@ def questions():
         print("\n[1] Conectar (Não implementado)")
         print("[2] Desconectar (Não implementado)")
         print("[3] Ligar dispositivo")
-        print("[4] Desligar dispositivo\n")
+        print("[4] Desligar dispositivo")
+        print("[5] Alterar valor padrão\n")
 
         resp = int(input("Escolha uma opcao: "))
 
@@ -22,6 +23,10 @@ def questions():
             client.device.handle_requests("turn_off")
             print("Dispositivo desligado")
 
+        elif (resp == 5):
+            new_value = input("Informe o novo valor: ")
+            client.device.set_default_value(new_value)
+            print("Valor padrão alterado!")
 
 
 threading.Thread(target=client.send_response, name="udp_sender").start()
