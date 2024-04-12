@@ -14,8 +14,23 @@ class Client:
         client_sock_tcp = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         client_sock_tcp.connect(self.address)
 
+        server_on = True
+
         while True:
             try:
+                # reconecta o client ao broker
+                while not server_on:
+                    try:
+                        client_sock_tcp = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                        client_sock_tcp.connect(self.address)
+
+                        server_on = True
+                    except Exception as e:
+                        pass
+
+                    sleep(3) # 3 segundos 
+
+
                 request = client_sock_tcp.recv(1024).decode().strip()
 
                 if not request:
@@ -24,12 +39,12 @@ class Client:
                 self.device.handle_requests(request)
 
             except ConnectionResetError:
-                print("Conexão com o servidor foi encerrada.")
-                break
+                # print("Conexão com o servidor foi encerrada.")
+                server_on = False
 
             except Exception as e:
                 print("Erro durante a recepção de dados:", e)
-                break
+                
 
         client_sock_tcp.close()    
 
@@ -48,7 +63,6 @@ class Client:
                 if self.device.online:
                     sent_off_message = False
                     response = f"{self.device.name} {time} {data}"
-
                     client_sock_udp.sendall(response.encode())
 
 
@@ -59,9 +73,9 @@ class Client:
                     sent_off_message = True
 
 
-
             except Exception as e:
                 print("Erro durante o envio de dados:", e)
+                break
 
 
 # device = AirConditioner("Temperatura")
@@ -69,4 +83,3 @@ class Client:
 
 # threading.Thread(target=client.send_response, name="udp_sender").start()
 # client.receive_data()
-
