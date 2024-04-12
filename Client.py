@@ -11,11 +11,7 @@ class Client:
 
 
     def receive_data(self):
-        client_sock_tcp = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        client_sock_tcp.connect(self.address)
-
-        server_on = True
-
+        server_on = False
         while True:
             try:
                 # reconecta o client ao broker
