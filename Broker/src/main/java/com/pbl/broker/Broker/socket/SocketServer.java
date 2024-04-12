@@ -70,23 +70,24 @@ public class SocketServer {
     }
 
     public static void receiveUDPMessage() {
+        byte[] buffer = new byte[1024];
+        DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
+
         while (true) {
             try {
-                byte[] buffer = new byte[1024];
-                DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
-
                 udpServer.receive(packet);
 
-                String message = new String(packet.getData(), 0, packet.getLength());
-                String senderIp = packet.getAddress().getHostAddress();
+                new Thread(() -> {
+                    String message = new String(packet.getData(), 0, packet.getLength());
+                    String senderIp = packet.getAddress().getHostAddress();
 
-                List<String> messageInfos = List.of(message.split(" "));
+                    List<String> messageInfos = List.of(message.split(" "));
 
-                ResponseModel response = new ResponseModel(messageInfos.get(0), messageInfos.get(1), messageInfos.get(2));
+                    ResponseModel response = new ResponseModel(messageInfos.get(0), messageInfos.get(1), messageInfos.get(2));
 
-                ResponseRepository.addResponse(senderIp, response);
-
-
+                    ResponseRepository.addResponse(senderIp, response);
+                }).start();
+                
             } catch (SocketException e) {
                 throw new RuntimeException(e);
 
