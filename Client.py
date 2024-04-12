@@ -59,13 +59,21 @@ class Client:
 
                 sleep(0.5) # 0.5 segundos de espera
 
-                if self.device.status == "online":
+                if self.device.online:
                     sent_off_message = False
                     response = f"{self.device.name} {time} {data}"
-                    client_sock_udp.sendall(response.encode())
+                    
+                    if self.device.status == "unpaused":
+                        sent_pause_message = False
+                        client_sock_udp.sendall(response.encode())
+
+                    elif self.device.status == "paused":
+                        if not sent_pause_message:
+                            client_sock_udp.sendall(response.encode())
+                        sent_pause_message = True
 
 
-                elif self.device.status == "offline":
+                elif not self.device.online:
                     response = f"{self.device.name} {time} offline"
 
                     if not sent_off_message:

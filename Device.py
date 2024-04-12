@@ -5,16 +5,30 @@ class Device:
 
     def __init__(self, name):
         self.name = name
-        self.status = "online"
+        self.online = True
+        self.status = "unpaused"
 
 
 
     def handle_requests(self, request):
-        if request == "turn_on":
-            self.status = "online"
-        
-        elif request == "turn_off":
-            self.status = "offline"
+        if not self.online:
+            if request == "turn_on":
+                self.online = True
+
+        elif self.online:
+            if request == "turn_off":
+                self.online = False
+                self.status = "unpaused"
+
+            elif request == "pause":
+                self.status = "paused"
+            
+            if self.status == "paused":
+                if request == "unpause":
+                    self.status = "unpaused"
+
+
+
 
 
     def get_data(self):
