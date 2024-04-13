@@ -21,7 +21,6 @@ public class BrokerService {
 
     public void sendSensorReq(Long id, String command) {
         String address = ResponseRepository.getKeyItem(id);
-        System.out.println(address);
 
         SocketServer.sendMessageToClient(address, command);
 

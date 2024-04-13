@@ -28,6 +28,7 @@ public class BrokerApplication extends Thread{
 		new Thread(() -> {
 			SocketServer.receiveUDPMessage();
 		}).start();
+
 		SocketServer.waitClientsConnection();
 
 
