@@ -10,6 +10,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ResponseModel {
+    private int id;
     private String name;
     private String time;
     private String data;

@@ -83,7 +83,10 @@ public class SocketServer {
 
                     List<String> messageInfos = List.of(message.split(" "));
 
-                    ResponseModel response = new ResponseModel(messageInfos.get(0), messageInfos.get(1), messageInfos.get(2));
+                    int id = ConnectedDevicesRepository.getIdByDevice(senderIp);
+
+                    ResponseModel response = new ResponseModel(id, messageInfos.get(0), messageInfos.get(1), messageInfos.get(2));
+
 
                     ResponseRepository.addResponse(senderIp, response);
                 }).start();
