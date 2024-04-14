@@ -8,7 +8,8 @@ export const CardContainer = styled.div`
     width: 200px;
     height: 150px;
     background-color: white;
-    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 5px 0px, rgba(0, 0, 0, 0.1) 0px 0px 1px 0px;
+    box-shadow: ${(props) => props.selected ? "rgba(0, 0, 0, 0.2) 0px 0px 5px 0px, rgba(0, 0, 0, 0.2) 0px 0px 1px 0px" : "rgba(149, 157, 165, 0.2) 0px 8px 24px"};
     padding: 10px;
     border-radius: 10px;
     cursor: pointer;
