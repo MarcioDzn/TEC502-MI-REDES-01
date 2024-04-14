@@ -9,32 +9,23 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class BrokerApplication extends Thread{
 
 	public static void main(String[] args) {
-		// Inicia a aplicação Spring Boot
+		// inicializa a aplicação springboot
 		SpringApplication.run(BrokerApplication.class, args);
 
-		// Cria e inicia uma nova instância de BrokerApplication
+		// inicia o Broker em uma thread
 		BrokerApplication thread = new BrokerApplication();
 		thread.start();
 	}
 
 	public void run() {
-		// Executa RequestListRepository.dispatchRequest() em uma thread separada
-//		new Thread(() -> {
-//			RequestListRepository.dispatchRequest();
-//		}).start();
-
 		// inicia o servidor
 		SocketServer.startServer();
+
+		// recebe continuadamente mensagens dos clients
 		new Thread(() -> {
-			SocketServer.receiveUDPMessage();
+			SocketServer.receiveMessage();
 		}).start();
 
 		SocketServer.waitClientsConnection();
-
-
-
-
-
 	}
-
 }

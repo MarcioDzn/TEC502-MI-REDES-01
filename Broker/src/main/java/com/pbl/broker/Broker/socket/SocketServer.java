@@ -30,6 +30,7 @@ public class SocketServer {
         }
     }
 
+    // singleton
     public static SocketServer getInstance() {
         if (instance == null) {
             instance = new SocketServer();
@@ -41,12 +42,13 @@ public class SocketServer {
         getInstance();
     }
 
+    // armazena os dispositivos que se conectaram ao servidor
     public static void waitClientsConnection() {
         while (true) {
             Socket client = null;
             try {
                 client = tcpServer.accept();
-                System.out.println("Cliente conectado do IP " + client.getInetAddress().getHostAddress());
+                System.out.println("Dispositivo conectado do IP " + client.getInetAddress().getHostAddress());
                 ConnectedDevicesRepository.addDevice(client.getInetAddress().getHostAddress(), client);
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -61,6 +63,7 @@ public class SocketServer {
                 OutputStream outputStream = client.getOutputStream();
                 PrintWriter out = new PrintWriter(outputStream, true);
                 out.println(message);
+                
             } catch (IOException e) {
                 throw new RuntimeException("Erro ao enviar mensagem para o cliente.", e);
             }
@@ -69,7 +72,8 @@ public class SocketServer {
         }
     }
 
-    public static void receiveUDPMessage() {
+    // recebe de maneira contínua mensagens dos clients e as armazena em um HashMap
+    public static void receiveMessage() {
         byte[] buffer = new byte[1024];
         DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
 
@@ -77,16 +81,14 @@ public class SocketServer {
             try {
                 udpServer.receive(packet);
 
+                // cada mensagem recebida é processada em uma thread específica
                 new Thread(() -> {
                     String message = new String(packet.getData(), 0, packet.getLength());
                     String senderIp = packet.getAddress().getHostAddress();
-
                     List<String> messageInfos = List.of(message.split(" "));
 
                     int id = ConnectedDevicesRepository.getIdByDevice(senderIp);
-
                     ResponseModel response = new ResponseModel(id, messageInfos.get(0), messageInfos.get(1), messageInfos.get(2));
-
 
                     ResponseRepository.addResponse(senderIp, response);
                 }).start();
