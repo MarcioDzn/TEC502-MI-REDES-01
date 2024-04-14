@@ -14,4 +14,5 @@ public class ResponseModel {
     private String name;
     private String time;
     private String data;
+    private String status;
 }

@@ -1,0 +1,25 @@
+package com.pbl.broker.Broker.services;
+
+import com.pbl.broker.Broker.models.ResponseModel;
+import com.pbl.broker.Broker.repositories.ResponseRepository;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class DeviceService {
+    // torna todos os dispositivos "desconectados" a cada n segundos
+    public static void invalidateDeviceConnection() throws InterruptedException {
+
+        while (true) {
+            List<String> deviceIps = ResponseRepository.getIpKeys();
+
+            for (int i = 0; i < deviceIps.size(); i++) {
+                ResponseModel deviceResponse = ResponseRepository.getResponse(deviceIps.get(i));
+
+                deviceResponse.setStatus("offline");
+            }
+
+            Thread.sleep(5000);
+        }
+    }
+}

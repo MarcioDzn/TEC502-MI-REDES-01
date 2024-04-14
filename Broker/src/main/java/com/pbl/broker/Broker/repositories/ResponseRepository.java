@@ -35,6 +35,11 @@ public class ResponseRepository {
         return items.get(id.intValue());
     }
 
+    public static List<String> getIpKeys() {
+        List<String> items = new ArrayList<>(responses.keySet());
+        return items;
+    }
+
     public static void removeResponse(String ip) {
         responses.remove(ip);
     }
