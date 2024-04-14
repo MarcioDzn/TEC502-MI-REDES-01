@@ -56,7 +56,7 @@ export function Home() {
                     ) : (
                         <>
                             {devices.data.map(item => (
-                                <li key={item.id}><SensorCard id={item.id} name={item.name} time={item.time} value={item.data} onClick={handleSelectSensor}/></li> 
+                                <li key={item.id}><SensorCard selected={selectedSensorIndex == item.id} id={item.id} name={item.name} time={item.time} value={item.data} status={item.status} onClick={handleSelectSensor}/></li> 
                             ))}
                         </>
                     )}
