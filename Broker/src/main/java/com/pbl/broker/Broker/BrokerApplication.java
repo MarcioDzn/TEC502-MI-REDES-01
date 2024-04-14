@@ -1,6 +1,5 @@
 package com.pbl.broker.Broker;
 
-import com.pbl.broker.Broker.repositories.RequestListRepository;
 import com.pbl.broker.Broker.socket.SocketServer;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
