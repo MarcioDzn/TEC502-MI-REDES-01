@@ -1,8 +1,8 @@
 import { ButtonContainer } from "./ButtonStyled";
 
-export function Button({handleClick, children}) {
+export function Button({handleClick, disabled, children}) {
     return (
-        <ButtonContainer onClick={handleClick}>
+        <ButtonContainer onClick={handleClick} disabled={disabled}>
             {children}
         </ButtonContainer>
         
