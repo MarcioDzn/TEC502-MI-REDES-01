@@ -27,8 +27,8 @@ public class DeviceService {
 
                 Long timeDiff = Math.abs(Duration.between(currentTime, responseTime).getSeconds());
 
-                if (timeDiff > 2 && (!deviceResponse.getStatus().equals("disconnected") && !deviceResponse.getStatus().equals("paused"))){
-                    deviceResponse.setStatus("offline");
+                if (timeDiff > 2 && (!deviceResponse.getStatus().equals("offline") && !deviceResponse.getStatus().equals("paused"))){
+                    deviceResponse.setStatus("disconnected");
                 }
             }
 

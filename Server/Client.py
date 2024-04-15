@@ -72,7 +72,7 @@ class Client:
 
 
                 elif not self.device.online:
-                    response = f"{self.device.name} {time} offline disconnected"
+                    response = f"{self.device.name} {time} offline offline"
 
                     if not sent_off_message:
                         client_sock_udp.sendall(response.encode())
