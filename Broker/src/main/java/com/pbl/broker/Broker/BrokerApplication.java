@@ -26,6 +26,14 @@ public class BrokerApplication extends Thread{
 			SocketServer.receiveMessage();
 		}).start();
 
+		new Thread(() -> {
+			try {
+				DeviceService.invalidateDeviceConnection();
+			} catch (InterruptedException e) {
+				throw new RuntimeException(e);
+			}
+		}).start();
+
 		SocketServer.waitClientsConnection();
 	}
 }

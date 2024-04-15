@@ -3,6 +3,8 @@ package com.pbl.broker.Broker.services;
 import com.pbl.broker.Broker.models.ResponseModel;
 import com.pbl.broker.Broker.repositories.ResponseRepository;
 
+import java.time.Duration;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,14 +14,26 @@ public class DeviceService {
 
         while (true) {
             List<String> deviceIps = ResponseRepository.getIpKeys();
+            LocalTime currentTime = LocalTime.now();
 
             for (int i = 0; i < deviceIps.size(); i++) {
                 ResponseModel deviceResponse = ResponseRepository.getResponse(deviceIps.get(i));
 
-                deviceResponse.setStatus("offline");
+                if (deviceResponse == null) {
+                    break;
+                }
+
+                LocalTime responseTime = LocalTime.parse(deviceResponse.getTime());
+
+                Long timeDiff = Math.abs(Duration.between(currentTime, responseTime).getSeconds());
+
+                System.out.println(timeDiff);
+                if (timeDiff > 2 && !deviceResponse.getData().equals("offline")){
+                    deviceResponse.setStatus("offline");
+                }
             }
 
-            Thread.sleep(5000);
+            Thread.sleep(2000);
         }
     }
 }
