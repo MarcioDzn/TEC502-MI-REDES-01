@@ -26,8 +26,7 @@ public class DeviceService {
                 LocalTime responseTime = LocalTime.parse(deviceResponse.getTime());
 
                 Long timeDiff = Math.abs(Duration.between(currentTime, responseTime).getSeconds());
-
-                System.out.println(timeDiff);
+                
                 if (timeDiff > 2 && !deviceResponse.getData().equals("offline")){
                     deviceResponse.setStatus("offline");
                 }
