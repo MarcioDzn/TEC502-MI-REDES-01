@@ -23,8 +23,15 @@ export const ControlPanelValue = styled.span`
 
 export const ControlPanelStatus = styled.span`
     display: flex;
-    gap: 10px;
+    justify-content: space-between;
+    align-items: center;
+    text-transform: capitalize;
     font-size: 1.2rem;
+
+    div {
+        display: flex;
+        gap: 10px;
+    }
 `
 
 export const SensorInfo = styled.div`

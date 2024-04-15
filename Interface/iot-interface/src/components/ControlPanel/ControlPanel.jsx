@@ -16,18 +16,19 @@ export function ControlPanel({device, handleOffline, handlePause, handleUnpause,
 
                         <ControlPanelValue>{device.data}</ControlPanelValue>
                         <ControlPanelStatus>
-                        {
-                            device.status === "online" ? 
-                            <>
-                                <i className="bi bi-wifi"></i>
-                                Conectado  
-                            </> : 
-                            <>
-                                <i className="bi bi-wifi-off"></i>
-                                Desconectado  
-                            </> 
+                            {
+                                device.status === "online" || device.status === "paused" ? 
+                                <div>
+                                    <i className="bi bi-wifi"></i>
+                                    Conectado  
+                                </div> : 
+                                <div>
+                                    <i className="bi bi-wifi-off"></i>
+                                    Desconectado  
+                                </div> 
 
-                        }
+                            }
+                            <span>{device.status}</span>
                         </ControlPanelStatus>
                     </SensorInfo>
                     <hr />

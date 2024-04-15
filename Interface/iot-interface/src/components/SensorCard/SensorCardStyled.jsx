@@ -39,8 +39,15 @@ export const CardValue = styled.span`
 
 export const CardStatus = styled.span`
     display: flex;
-    gap: 5px;
+    justify-content: space-between;
+    align-items: center;
+    text-transform: capitalize;
     align-items: start;
     width: 100%;
     font-size: 0.8rem;
+
+    div {
+        display: flex;
+        gap: 5px;
+    }
 `

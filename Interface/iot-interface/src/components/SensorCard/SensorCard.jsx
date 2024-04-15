@@ -12,18 +12,18 @@ export function SensorCard({id, name, time, value, status, selected, onClick}) {
 
             <CardStatus>
                 {
-                    status === "online" ? 
-                    <>
+                    status === "online" || status === "paused" ? 
+                    <div>
                         <i className="bi bi-wifi"></i>
                         Conectado  
-                    </> : 
-                    <>
+                    </div> : 
+                    <div>
                         <i className="bi bi-wifi-off"></i>
                         Desconectado  
-                    </> 
+                    </div> 
 
                 }
- 
+                <span>{status}</span>
             </CardStatus>
         </CardContainer>
     )
