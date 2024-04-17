@@ -63,7 +63,7 @@ public class SocketServer {
                 OutputStream outputStream = client.getOutputStream();
                 PrintWriter out = new PrintWriter(outputStream, true);
                 out.println(message);
-                
+
             } catch (IOException e) {
                 throw new RuntimeException("Erro ao enviar mensagem para o cliente.", e);
             }
@@ -87,12 +87,25 @@ public class SocketServer {
                     String senderIp = packet.getAddress().getHostAddress();
                     List<String> messageInfos = List.of(message.split(" "));
 
-                    int id = ConnectedDevicesRepository.getIdByDevice(senderIp);
-                    ResponseModel response = new ResponseModel(id, messageInfos.get(0), messageInfos.get(1), messageInfos.get(2), messageInfos.get(3));
+                    String responseType = messageInfos.get(0);
 
-                    ResponseRepository.addResponse(senderIp, response);
+                    if (responseType.equals("data")) {
+                        int id = ConnectedDevicesRepository.getIdByDevice(senderIp);
+                        ResponseModel response = new ResponseModel(id, messageInfos.get(1), messageInfos.get(2), messageInfos.get(3), messageInfos.get(4));
+
+                        ResponseRepository.addResponse(senderIp, response);
+
+                    } else if (responseType.equals("alive_check")) {
+                        ResponseModel response = ResponseRepository.getResponse(senderIp);
+                        if (response != null) {
+                            response.setStatus(response.getStatus());
+                            ResponseRepository.addResponse(senderIp, response);
+                        }
+
+                    }
+
                 }).start();
-                
+
             } catch (SocketException e) {
                 throw new RuntimeException(e);
 
