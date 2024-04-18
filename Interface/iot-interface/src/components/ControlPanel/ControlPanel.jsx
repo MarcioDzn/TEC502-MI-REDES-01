@@ -28,7 +28,7 @@ export function ControlPanel({device, handleOffline, handlePause, handleUnpause,
                                 </div> 
 
                             }
-                            <span>{device.status}</span>
+                            <span>{device.status !== "disconnected" ? device.status : ""}</span>
                         </ControlPanelStatus>
                     </SensorInfo>
                     <hr />

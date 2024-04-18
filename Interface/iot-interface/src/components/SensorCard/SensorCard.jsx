@@ -23,7 +23,7 @@ export function SensorCard({id, name, time, value, status, selected, onClick}) {
                     </div> 
 
                 }
-                <span>{status}</span>
+                <span>{status !== "disconnected" ? status : ""}</span>
             </CardStatus>
         </CardContainer>
     )
