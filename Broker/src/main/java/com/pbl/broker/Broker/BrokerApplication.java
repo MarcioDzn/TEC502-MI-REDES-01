@@ -26,13 +26,14 @@ public class BrokerApplication extends Thread{
 			SocketServer.receiveMessage();
 		}).start();
 
-//		new Thread(() -> {
-//			try {
-//				DeviceService.invalidateDeviceConnection();
-//			} catch (InterruptedException e) {
-//				throw new RuntimeException(e);
-//			}
-//		}).start();
+		// invalida a cada n segundos a conexão com o cliente, para verificar se ainda está online
+		new Thread(() -> {
+			try {
+				DeviceService.invalidateDeviceConnection();
+			} catch (InterruptedException e) {
+				throw new RuntimeException(e);
+			}
+		}).start();
 
 		SocketServer.waitClientsConnection();
 	}

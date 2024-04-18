@@ -98,7 +98,8 @@ public class SocketServer {
                     } else if (responseType.equals("alive_check")) {
                         ResponseModel response = ResponseRepository.getResponse(senderIp);
                         if (response != null) {
-                            response.setStatus(response.getStatus());
+                            response.setTime(messageInfos.get(1));
+
                             ResponseRepository.addResponse(senderIp, response);
                         }
 

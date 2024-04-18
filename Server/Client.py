@@ -48,7 +48,8 @@ class Client:
     def send_alive_check(self, sock):
         while True:
             try:
-                response = "alive_check online"
+                time = utils.get_current_time()
+                response = f"alive_check {time} online"
                 sock.sendall(response.encode())
             except:
                 pass
@@ -61,6 +62,7 @@ class Client:
         client_sock_udp.connect((self.address[0], self.address[1] + 2000)) # porta 5000
 
         threading.Thread(target=self.send_alive_check, args=(client_sock_udp,), name="alive_checker").start()
+
         while True:
             try:
                 data = str(self.device.get_data())
