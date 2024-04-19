@@ -27,7 +27,7 @@ public class DeviceService {
 
                 Long timeDiff = Math.abs(Duration.between(currentTime, responseTime).getSeconds());
 
-                if (timeDiff > 20){
+                if (timeDiff > 6){
                     deviceResponse.setStatus("disconnected");
                 }
             }

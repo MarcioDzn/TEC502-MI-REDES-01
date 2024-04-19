@@ -88,21 +88,23 @@ public class SocketServer {
                     List<String> messageInfos = List.of(message.split(" "));
 
                     String responseType = messageInfos.get(0);
+                    int id = ConnectedDevicesRepository.getIdByDevice(senderIp);
 
                     if (responseType.equals("data")) {
-                        int id = ConnectedDevicesRepository.getIdByDevice(senderIp);
                         ResponseModel response = new ResponseModel(id, messageInfos.get(1), messageInfos.get(2), messageInfos.get(3), messageInfos.get(4));
 
                         ResponseRepository.addResponse(senderIp, response);
 
                     } else if (responseType.equals("alive_check")) {
                         ResponseModel response = ResponseRepository.getResponse(senderIp);
+
                         if (response != null) {
-                            response.setTime(messageInfos.get(1));
+                            response.setTime(messageInfos.get(2));
 
-                            ResponseRepository.addResponse(senderIp, response);
+                        } else {
+                            response = new ResponseModel(id, messageInfos.get(1), messageInfos.get(2), messageInfos.get(3), messageInfos.get(4));
                         }
-
+                        ResponseRepository.addResponse(senderIp, response);
                     }
 
                 }).start();

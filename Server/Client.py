@@ -49,12 +49,12 @@ class Client:
         while True:
             try:
                 time = utils.get_current_time()
-                response = f"alive_check {time} online"
+                response = f"alive_check {self.device.name} {time} none online"
                 sock.sendall(response.encode())
             except:
                 pass
             finally:
-                sleep(10)
+                sleep(3)
 
 
     def send_response(self):
