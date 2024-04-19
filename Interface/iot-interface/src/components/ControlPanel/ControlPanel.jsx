@@ -33,7 +33,7 @@ export function ControlPanel({device, handleOffline, handlePause, handleUnpause,
                     </SensorInfo>
                     <hr />
                     <ControlButtons>
-                        <PowerButton offline={device.data} disconnected={device.status == "disconnected"} onClick={handleOffline} disabled={device.status == "disconnected"}><i className="bi bi-power"></i></PowerButton>
+                        <PowerButton offline={device.status} disconnected={(device.status == "disconnected").toString()} onClick={handleOffline} disabled={device.status == "disconnected"}><i className="bi bi-power"></i></PowerButton>
 
                         <div>
                             <Button handleClick={handlePause} disabled={device.status == "disconnected"}><i className="bi bi-pause-fill"></i></Button>

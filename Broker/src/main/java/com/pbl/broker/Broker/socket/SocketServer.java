@@ -91,7 +91,7 @@ public class SocketServer {
                     int id = ConnectedDevicesRepository.getIdByDevice(senderIp);
 
                     if (responseType.equals("data")) {
-                        ResponseModel response = new ResponseModel(id, messageInfos.get(1), messageInfos.get(2), messageInfos.get(3), messageInfos.get(4));
+                        ResponseModel response = new ResponseModel(id, messageInfos.get(1), messageInfos.get(2), messageInfos.get(2),  messageInfos.get(3), messageInfos.get(4));
 
                         ResponseRepository.addResponse(senderIp, response);
 
@@ -99,10 +99,10 @@ public class SocketServer {
                         ResponseModel response = ResponseRepository.getResponse(senderIp);
 
                         if (response != null) {
-                            response.setTime(messageInfos.get(2));
+                            response.setAliveTime(messageInfos.get(2));
 
                         } else {
-                            response = new ResponseModel(id, messageInfos.get(1), messageInfos.get(2), messageInfos.get(3), messageInfos.get(4));
+                            response = new ResponseModel(id, messageInfos.get(1), messageInfos.get(2), messageInfos.get(2), "offline", "offline");
                         }
                         ResponseRepository.addResponse(senderIp, response);
                     }

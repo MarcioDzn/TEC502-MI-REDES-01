@@ -23,7 +23,7 @@ public class DeviceService {
                     break;
                 }
 
-                LocalTime responseTime = LocalTime.parse(deviceResponse.getTime());
+                LocalTime responseTime = LocalTime.parse(deviceResponse.getAliveTime());
 
                 Long timeDiff = Math.abs(Duration.between(currentTime, responseTime).getSeconds());
 

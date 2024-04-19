@@ -68,7 +68,7 @@ export const PowerButton = styled.button`
     transition: all 0.3s ease-in-out;
     margin: 40px 0px;
 
-    box-shadow: ${(props) => props.disconnected ? "0px 0px 20px 1px #cecece" : props.offline == "offline" ? 
+    box-shadow: ${(props) => props.disconnected == "true" ? "0px 0px 20px 1px #cecece" : props.offline == "offline" ? 
     `
     0px 0px 20px 1px #ff0000
     ` : "0px 0px 20px 1px green" };
@@ -76,7 +76,7 @@ export const PowerButton = styled.button`
     cursor: pointer;
 
     &:hover {
-        box-shadow: ${(props) => props.disconnected ? "0px 0px 20px 1px #cecece" : props.offline == "offline" ? 
+        box-shadow: ${(props) => props.disconnected == "true" ? "0px 0px 20px 1px #cecece" : props.offline == "offline" ? 
         `
         0px 0px 20px 5px #ff0000
         ` : "0px 0px 20px 5px green" };

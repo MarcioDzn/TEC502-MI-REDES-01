@@ -13,6 +13,7 @@ public class ResponseModel {
     private int id;
     private String name;
     private String time;
+    private String aliveTime;
     private String data;
     private String status;
 }
