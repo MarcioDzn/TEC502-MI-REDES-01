@@ -1,6 +1,6 @@
 import { SensorCard } from "../../components/SensorCard/SensorCard";
 import { useQuery } from '@tanstack/react-query';
-import { getDevices, pauseDevice, setDeviceOffline, setDeviceOnline, unpauseDevice } from "../../services/deviceService";
+import { getDevices, setDeviceOffline, setDeviceOnline } from "../../services/deviceService";
 import {useEffect, useState} from "react"
 import { DeviceList, HomeContainer } from "./HomeStyled";
 import { ControlPanel } from "../../components/ControlPanel/ControlPanel";
@@ -20,14 +20,6 @@ export function Home() {
 
     const {mutate: setOnlineMutation, isPending: isPendingOnline} = useMutation({
         mutationFn: setDeviceOnline
-    })
-
-    const {mutate: setPauseMutation, isPending: isPendingPause} = useMutation({
-        mutationFn: pauseDevice
-    })
-
-    const {mutate: setUnpauseMutation, isPending: isPendingUnpause} = useMutation({
-        mutationFn: unpauseDevice
     })
 
     useEffect(() => {
@@ -62,13 +54,12 @@ export function Home() {
                     )}
 
                 </DeviceList>   
-
+                
+                
                 <ControlPanel device={selectedSensorIndex > -1 ? devices.data[selectedSensorIndex] : null} 
                     handleOffline = {() => {devices.data[selectedSensorIndex].data == "offline" ? 
                         setOnlineMutation(selectedSensorIndex) : 
                         setOfflineMutation(selectedSensorIndex)}}
-                    handlePause = {() => {setPauseMutation(selectedSensorIndex)}}
-                    handleUnpause = {() => {setUnpauseMutation(selectedSensorIndex)}}
                 >
                 
                 </ControlPanel>

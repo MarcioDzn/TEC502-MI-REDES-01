@@ -6,7 +6,6 @@ class Device:
     def __init__(self, name):
         self.name = name
         self.online = True
-        self.status = "unpaused"
 
 
 
@@ -18,17 +17,6 @@ class Device:
         elif self.online:
             if request == "turn_off":
                 self.online = False
-                self.status = "unpaused"
-
-            elif request == "pause":
-                self.status = "paused"
-            
-            if self.status == "paused":
-                if request == "unpause":
-                    self.status = "unpaused"
-
-
-
 
 
     def get_data(self):

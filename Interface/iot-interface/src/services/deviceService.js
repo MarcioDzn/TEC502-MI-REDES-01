@@ -21,17 +21,3 @@ export function setDeviceOnline(id) {
     }
     axios.patch(`${baseURL}/api/sensor/${id}`, body);
 }
-
-export function pauseDevice(id) {
-    const body = {
-        command: "pause"
-    }
-    axios.patch(`${baseURL}/api/sensor/${id}`, body);
-}
-
-export function unpauseDevice(id) {
-    const body = {
-        command: "unpause"
-    }
-    axios.patch(`${baseURL}/api/sensor/${id}`, body);
-}
