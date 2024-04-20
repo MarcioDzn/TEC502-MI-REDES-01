@@ -16,3 +16,22 @@ class AirConditioner(Device):
 
     def set_default_value(self, value):
         self.default_value = value
+
+
+    def get_options(self):
+        while True:
+            print("\n[1] Ligar dispositivo")
+            print("[2] Desligar dispositivo")
+            print("[3] Alterar valor padrão\n")
+
+            resp = int(input("Escolha uma opcao: "))
+
+            if (resp == 1):
+                self.handle_requests("turn_on")
+
+            elif (resp == 2):
+                self.handle_requests("turn_off")
+
+            elif (resp == 3):
+                new_value = input("Informe o novo valor: ")
+                self.set_default_value(new_value)
