@@ -20,6 +20,7 @@ public class BrokerService {
     }
 
     public void sendSensorReq(Long id, String command) {
+        command = "command::" + command;
         String address = ResponseRepository.getKeyItem(id);
 
         SocketServer.sendMessageToClient(address, command);

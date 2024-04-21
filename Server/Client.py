@@ -34,7 +34,8 @@ class Client:
                 if not request:
                     server_on = False
                 
-                self.device.handle_requests(request)
+                command = request.split("::")[1]
+                self.device.handle_requests(command)
 
             except ConnectionResetError:
                 server_on = False
