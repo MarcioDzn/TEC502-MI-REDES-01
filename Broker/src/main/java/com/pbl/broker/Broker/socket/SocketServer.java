@@ -3,12 +3,14 @@ package com.pbl.broker.Broker.socket;
 import com.pbl.broker.Broker.models.ResponseModel;
 import com.pbl.broker.Broker.repositories.ConnectedDevicesRepository;
 import com.pbl.broker.Broker.repositories.ResponseRepository;
+import com.pbl.broker.Broker.utils.ResponseSplit;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.*;
 import java.util.List;
+import java.util.Map;
 
 public class SocketServer {
     private static ServerSocket tcpServer;
@@ -85,13 +87,14 @@ public class SocketServer {
                 new Thread(() -> {
                     String message = new String(packet.getData(), 0, packet.getLength());
                     String senderIp = packet.getAddress().getHostAddress();
-                    List<String> messageInfos = List.of(message.split(" "));
-
-                    String responseType = messageInfos.get(0);
                     int id = ConnectedDevicesRepository.getIdByDevice(senderIp);
 
+                    Map<String, String> responseSplitted = ResponseSplit.splitResponse(message);
+
+                    String responseType = responseSplitted.get("type");
+
                     if (responseType.equals("data")) {
-                        ResponseModel response = new ResponseModel(id, messageInfos.get(1), messageInfos.get(2), messageInfos.get(2),  messageInfos.get(3), messageInfos.get(4));
+                        ResponseModel response = new ResponseModel(id, responseSplitted.get("name"), responseSplitted.get("time"), responseSplitted.get("time"),  responseSplitted.get("data"), responseSplitted.get("status"));
 
                         ResponseRepository.addResponse(senderIp, response);
 
@@ -99,11 +102,12 @@ public class SocketServer {
                         ResponseModel response = ResponseRepository.getResponse(senderIp);
 
                         if (response != null) {
-                            response.setAliveTime(messageInfos.get(2));
+                            response.setAliveTime(responseSplitted.get("time"));
 
                         } else {
-                            response = new ResponseModel(id, messageInfos.get(1), messageInfos.get(2), messageInfos.get(2), "offline", "offline");
+                            response = new ResponseModel(id, responseSplitted.get("name"), responseSplitted.get("time"), responseSplitted.get("time"), "offline", "offline");
                         }
+
                         ResponseRepository.addResponse(senderIp, response);
                     }
 

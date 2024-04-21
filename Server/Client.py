@@ -49,7 +49,7 @@ class Client:
         while True:
             try:
                 time = utils.get_current_time()
-                response = f"alive_check {self.device.name} {time} none online"
+                response = f"type::alive_check, name::{self.device.name}, time::{time}, data::none, status::online"
                 sock.sendall(response.encode())
             except:
                 pass
@@ -72,11 +72,11 @@ class Client:
 
                 if self.device.online:
                     sent_off_message = False
-                    response = f"data {self.device.name} {time} {data} online"
+                    response = f"type::data, name::{self.device.name}, time::{time}, data::{data}, status::online"
                     client_sock_udp.sendall(response.encode())
 
                 elif not self.device.online:
-                    response = f"data {self.device.name} {time} offline offline"
+                    response = f"type::data, name::{self.device.name}, time::{time}, data::offline, status::offline"
 
                     if not sent_off_message:
                         client_sock_udp.sendall(response.encode())
