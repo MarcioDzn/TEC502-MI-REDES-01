@@ -32,7 +32,11 @@ export function Home() {
     }, [refetch]);
 
     function handleSelectSensor(index) {
-        setSelectedSensorIndex(index);
+        if (index == selectedSensorIndex) {
+            setSelectedSensorIndex(-1)
+        } else {
+            setSelectedSensorIndex(index);
+        }
     }
 
     return (
@@ -41,17 +45,13 @@ export function Home() {
 
             <div>
                 <DeviceList>
-                    {isFetching ? (
-                        <div>Carregando...</div>
-                    ) : isError ? (
-                        <div>Ocorreu um erro ao carregar os dados.</div>
-                    ) : (
+                    {
                         <>
-                            {devices.data.map(item => (
+                            {devices?.data?.map(item => (
                                 <li key={item.id}><SensorCard selected={selectedSensorIndex == item.id} id={item.id} name={item.name} time={item.time} value={item.data} status={item.status} onClick={handleSelectSensor}/></li> 
                             ))}
                         </>
-                    )}
+                    }
 
                 </DeviceList>   
                 
