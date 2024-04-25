@@ -1,0 +1,34 @@
+version: '3.7'
+
+services:
+  client:
+    build: 
+      context: ./Interface/iot-interface
+    networks:
+      - iot-network
+    ports:
+      - "3001:3000"
+
+  broker:
+    build: 
+      context: ./Broker
+    networks:
+      - iot-network
+    ports:
+      - "8080:8080"
+      - "5000:5000/udp"
+      - "3000:3000"
+
+  server:
+    build: 
+      context: ./Server
+    networks:
+      - iot-network
+    ports:
+      - "3000:3000"
+    environment:
+      - BROKER_IP=<IP REAL DO BROKER>
+
+networks:
+  iot-network:
+    driver: bridge

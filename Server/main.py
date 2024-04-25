@@ -1,9 +1,12 @@
 import threading
 from AirConditioner import *
 from Client import *
+import os
+
+ip = os.getenv('BROKER_IP')
 
 device = AirConditioner("Temperatura")
-client = Client(("localhost", 3000), device)
+client = Client((ip, 3000), device)
 
 def questions():
     client.device.get_options()
