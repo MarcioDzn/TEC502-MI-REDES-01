@@ -1,4 +1,4 @@
-version: '3.7'
+version: '3'
 
 services:
   client:
@@ -28,6 +28,7 @@ services:
       - "3000:3000"
     environment:
       - BROKER_IP=<IP REAL DO BROKER>
+      - DEVICE_NAME=<NOME DO DISPOSITIVO>
 
 networks:
   iot-network:

@@ -4,8 +4,9 @@ from Client import *
 import os
 
 ip = os.getenv('BROKER_IP')
+name = os.getenv('DEVICE_NAME')
 
-device = AirConditioner("Temperatura")
+device = AirConditioner(name)
 client = Client((ip, 3000), device)
 
 def questions():
