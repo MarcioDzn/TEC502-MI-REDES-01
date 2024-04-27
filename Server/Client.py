@@ -17,14 +17,16 @@ class Client:
                 # reconecta o client ao broker
                 while not server_on:
                     try:
+                        print("\nTentando conectar-se ao broker...")
                         client_sock_tcp = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
                         client_sock_tcp.connect(self.address)
 
                         server_on = True
+                        print("\nConexão realizada com sucesso!\n")
 
                     except Exception as e:
-                        pass
+                        print("\n[ERRO AO TENTAR REALIZAR A CONEXÃO]")
 
                     sleep(3) # 3 segundos 
 
@@ -41,7 +43,8 @@ class Client:
                 server_on = False
 
             except Exception as e:
-                print("Erro durante a recepção de dados:", e)
+                server_on = False
+                print("\n\n[ERRO COM A CONEXÃO]")
                 
 
         client_sock_tcp.close()    
@@ -53,7 +56,7 @@ class Client:
                 response = f"type::alive_check, name::{self.device.name}, time::{time}, data::none, status::online"
                 sock.sendto(response.encode(), (self.address[0], self.address[1] + 2000))
             except:
-                pass
+                print("\n[ERRO AO ENVIAR MENSAGEM DE VERIFICAÇÃO]")
             finally:
                 sleep(3)
 
@@ -84,7 +87,7 @@ class Client:
 
 
             except Exception as e:
-                pass
+                print("\n[ERRO AO ENVIAR DADO MEDIDO]")
 
 
 # device = AirConditioner("Temperatura")
