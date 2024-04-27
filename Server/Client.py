@@ -51,7 +51,7 @@ class Client:
             try:
                 time = utils.get_current_time()
                 response = f"type::alive_check, name::{self.device.name}, time::{time}, data::none, status::online"
-                sock.sendall(response.encode())
+                sock.sendto(response.encode(), (self.address[0], self.address[1] + 2000))
             except:
                 pass
             finally:
@@ -60,7 +60,6 @@ class Client:
 
     def send_response(self):
         client_sock_udp = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        client_sock_udp.connect((self.address[0], self.address[1] + 2000)) # porta 5000
 
         threading.Thread(target=self.send_alive_check, args=(client_sock_udp,), name="alive_checker").start()
 
@@ -74,13 +73,13 @@ class Client:
                 if self.device.online:
                     sent_off_message = False
                     response = f"type::data, name::{self.device.name}, time::{time}, data::{data}, status::online"
-                    client_sock_udp.sendall(response.encode())
+                    client_sock_udp.sendto(response.encode(), (self.address[0], self.address[1] + 2000))
 
                 elif not self.device.online:
                     response = f"type::data, name::{self.device.name}, time::{time}, data::offline, status::offline"
 
                     if not sent_off_message:
-                        client_sock_udp.sendall(response.encode())
+                        client_sock_udp.sendto(response.encode(), (self.address[0], self.address[1] + 2000))
                     sent_off_message = True
 
 
