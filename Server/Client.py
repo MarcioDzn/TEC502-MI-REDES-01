@@ -9,26 +9,26 @@ class Client:
         self.address = address
         self.device = device
         self.isConnected = False
+        self.deviceIp = ""
 
 
     def handle_tcp_connection(self):   
         sock_tcp = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock_tcp.bind(("0.0.0.0", 3000))
 
-        sock_tcp.listen(1)  
-
-        hostname = socket.gethostname()
-        ip_address = socket.gethostbyname(hostname)   
-
-        print(ip_address)
+        sock_tcp.listen(1)   
+  
 
         while True:
             conn, addr = sock_tcp.accept()
             with conn:
                 data = conn.recv(1024).decode().strip()
 
-                if (data == "first_conn"):
+                formatted_data = data.split(" ")
+                print(formatted_data)
+                if (formatted_data[0] == "first_conn"):
                     self.isConnected = True
+                    self.deviceIp = formatted_data[1]
                     print("Conexão estabelecida com o broker")
                 else:
                     self.device.handle_requests(data)
@@ -83,7 +83,7 @@ class Client:
         while True:
             try:
                 time = utils.get_current_time()
-                response = f"type::alive_check, name::{self.device.name}, time::{time}, data::none, status::online"
+                response = f"type::alive_check, ip::{self.deviceIp}, name::{self.device.name}, time::{time}, data::none, status::online"
                 sock.sendto(response.encode(), (self.address[0], self.address[1] + 2000))
             except:
                 print("\n[ERRO AO ENVIAR MENSAGEM DE VERIFICAÇÃO]")
@@ -107,11 +107,11 @@ class Client:
 
                 if self.device.online:
                     sent_off_message = False
-                    response = f"type::data, name::{self.device.name}, time::{time}, data::{data}, status::online"
+                    response = f"type::data, ip::{self.deviceIp}, name::{self.device.name}, time::{time}, data::{data}, status::online"
                     client_sock_udp.sendto(response.encode(), (self.address[0], self.address[1] + 2000))
 
                 elif not self.device.online:
-                    response = f"type::data, name::{self.device.name}, time::{time}, data::offline, status::offline"
+                    response = f"type::data, ip::{self.deviceIp}, name::{self.device.name}, time::{time}, data::offline, status::offline"
 
                     if not sent_off_message:
                         client_sock_udp.sendto(response.encode(), (self.address[0], self.address[1] + 2000))

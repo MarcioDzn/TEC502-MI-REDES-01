@@ -12,6 +12,7 @@ import lombok.Setter;
 public class ResponseModel {
     private int id;
     private String name;
+    private String ip;
     private String time;
     private String aliveTime;
     private String data;

@@ -51,9 +51,9 @@ public class SocketServer {
                 // tenta estabelecer uma conexão TCP com os dispositivos que ainda não estão conectados
                 if (!device.isConnected()) {
                     try {
-                        sendMessageToClient(device.getIp(), device.getPort(), "first_conn");
+                        sendMessageToClient(device.getIp(), device.getPort(), "first_conn " + device.getIp());
                         device.setConnected(true);
-                        System.out.println("Dispositivo do ip "+device.getIp()+" conectado com sucesso!");
+                        System.out.println("Dispositivo do ip " + device.getIp() + " conectado com sucesso!");
     
                     } catch (UnknownHostException e) {
                         System.out.println("Não foi possível conectar-se ao dispositivo de ip: " + device.getIp());
@@ -100,9 +100,9 @@ public class SocketServer {
                     
 
                     if (responseType.equals("data")) {
-                        ResponseModel response = new ResponseModel(id, responseSplitted.get("name"), responseSplitted.get("time"), responseSplitted.get("time"),  responseSplitted.get("data"), responseSplitted.get("status"));
+                        ResponseModel response = new ResponseModel(id, responseSplitted.get("name"), responseSplitted.get("ip"), responseSplitted.get("time"), responseSplitted.get("time"),  responseSplitted.get("data"), responseSplitted.get("status"));
 
-                        ResponseRepository.addResponse(senderIp, response);
+                        ResponseRepository.addResponse(responseSplitted.get("ip"), response);
 
                     } else if (responseType.equals("alive_check")) {
                         ResponseModel response = ResponseRepository.getResponse(senderIp);
@@ -111,10 +111,10 @@ public class SocketServer {
                             response.setAliveTime(responseSplitted.get("time"));
 
                         } else {
-                            response = new ResponseModel(id, responseSplitted.get("name"), responseSplitted.get("time"), responseSplitted.get("time"), "offline", "offline");
+                            response = new ResponseModel(id, responseSplitted.get("name"), responseSplitted.get("ip"), responseSplitted.get("time"), responseSplitted.get("time"), "offline", "offline");
                         }
 
-                        ResponseRepository.addResponse(senderIp, response);
+                        ResponseRepository.addResponse(responseSplitted.get("ip"), response);
                     }
 
                 }).start();
