@@ -35,6 +35,15 @@ public class BrokerApplication extends Thread{
 			}
 		}).start();
 
-		SocketServer.waitClientsConnection();
+		new Thread(() -> {
+			try {
+				SocketServer.sendDeviceTCPConnection();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}).start();
+
+		
 	}
 }

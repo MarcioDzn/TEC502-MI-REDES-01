@@ -6,14 +6,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ConnectedDevicesRepository {
-    private static Map<String, Socket> connectedDevices = new HashMap<>();
+import com.pbl.broker.Broker.models.DeviceModel;
 
-    public static void addDevice(String ip, Socket device) {
+public class DevicesRepository {
+    private static Map<String, DeviceModel> connectedDevices = new HashMap<>();
+
+    public static void addDevice(String ip, DeviceModel device) {
         connectedDevices.put(ip, device);
     }
 
-    public static Socket getDevice(String ip) {
+    public static DeviceModel getDevice(String ip) {
         return connectedDevices.get(ip);
     }
 
@@ -22,7 +24,12 @@ public class ConnectedDevicesRepository {
         int index = items.indexOf(ip);
         return index;
     }
+
     public static void removeDevice(String ip) {
         connectedDevices.remove(ip);
+    }
+
+    public static Map<String, DeviceModel> getConnectedDevices() {
+        return connectedDevices;
     }
 }

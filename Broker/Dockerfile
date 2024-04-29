@@ -18,6 +18,7 @@ RUN mvn clean package
 
 # Expõe a porta em que o aplicativo será executado (se necessário)
 EXPOSE 8080
+EXPOSE 5000/udp
 
 # Comando para executar a aplicação Spring Boot quando o contêiner for iniciado
 CMD ["java", "-jar", "target/Broker-0.0.1-SNAPSHOT.jar"]

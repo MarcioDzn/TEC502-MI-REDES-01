@@ -1,11 +1,13 @@
 package com.pbl.broker.Broker.controllers;
 
+import com.pbl.broker.Broker.models.DeviceModel;
 import com.pbl.broker.Broker.models.RequestModel;
 import com.pbl.broker.Broker.models.ResponseModel;
 import com.pbl.broker.Broker.services.BrokerService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -29,7 +31,18 @@ public class BrokerController {
 
     @PatchMapping("/{id}")
     public ResponseEntity sendSensorReq(@PathVariable Long id, @RequestBody RequestModel request) {
-        service.sendSensorReq(id, request.getCommand());
+        try {
+            service.sendSensorReq(id, request.getCommand());
+            return ResponseEntity.ok().build();
+
+        } catch (IOException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PostMapping()
+    public ResponseEntity addDevice(@RequestBody DeviceModel device) {
+        service.addDevice(device.getIp(), device.getPort());
 
         return ResponseEntity.ok().build();
     }

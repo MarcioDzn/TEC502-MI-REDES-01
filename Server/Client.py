@@ -8,48 +8,78 @@ class Client:
     def __init__(self, address, device):
         self.address = address
         self.device = device
+        self.isConnected = False
 
 
-    def receive_data(self):
-        server_on = False
+    def handle_tcp_connection(self):   
+        sock_tcp = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock_tcp.bind(("0.0.0.0", 3000))
+
+        sock_tcp.listen(1)  
+
+        hostname = socket.gethostname()
+        ip_address = socket.gethostbyname(hostname)   
+
+        print(ip_address)
+
         while True:
-            try:
-                # reconecta o client ao broker
-                while not server_on:
-                    try:
-                        print("\nTentando conectar-se ao broker...")
-                        client_sock_tcp = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            conn, addr = sock_tcp.accept()
+            with conn:
+                data = conn.recv(1024).decode().strip()
 
-                        client_sock_tcp.connect(self.address)
-
-                        server_on = True
-                        print("\nConexão realizada com sucesso!\n")
-
-                    except Exception as e:
-                        print("\n[ERRO AO TENTAR REALIZAR A CONEXÃO]")
-
-                    sleep(3) # 3 segundos 
+                if (data == "first_conn"):
+                    self.isConnected = True
+                    print("Conexão estabelecida com o broker")
+                else:
+                    self.device.handle_requests(data)
 
 
-                request = client_sock_tcp.recv(1024).decode().strip() 
 
-                if not request:
-                    server_on = False
+
+
+        
+        # server_on = False
+        # while True:
+        #     try:
+        #         # reconecta o client ao broker
+        #         while not server_on:
+        #             try:
+        #                 print("\nTentando conectar-se ao broker...")
+        #                 
+
+        #                 client_sock_tcp.connect(self.address)
+
+        #                 server_on = True
+        #                 print("\nConexão realizada com sucesso!\n")
+
+        #             except Exception as e:
+        #                 print("\n[ERRO AO TENTAR REALIZAR A CONEXÃO]")
+
+        #             sleep(3) # 3 segundos 
+
+
+        #         request = client_sock_tcp.recv(1024).decode().strip() 
+
+        #         if not request:
+        #             server_on = False
                 
-                command = request.split("::")[1]
-                self.device.handle_requests(command)
+        #         command = request.split("::")[1]
+        #         self.device.handle_requests(command)
 
-            except ConnectionResetError:
-                server_on = False
+        #     except ConnectionResetError:
+        #         server_on = False
 
-            except Exception as e:
-                server_on = False
-                print("\n\n[ERRO COM A CONEXÃO]")
+        #     except Exception as e:
+        #         server_on = False
+        #         print("\n\n[ERRO COM A CONEXÃO]")
                 
 
         client_sock_tcp.close()    
 
     def send_alive_check(self, sock):
+        while not self.isConnected:
+            pass
+
         while True:
             try:
                 time = utils.get_current_time()
@@ -63,9 +93,11 @@ class Client:
 
     def send_response(self):
         client_sock_udp = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-
         threading.Thread(target=self.send_alive_check, args=(client_sock_udp,), name="alive_checker").start()
 
+        while not self.isConnected:
+            pass
+        
         while True:
             try:
                 data = str(self.device.get_data())

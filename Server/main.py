@@ -14,6 +14,6 @@ def questions():
 
 
 threading.Thread(target=client.send_response, name="udp_sender").start()
-threading.Thread(target=client.receive_data, name="tcp_receiver").start()
+threading.Thread(target=client.handle_tcp_connection, name="tcp_receiver").start()
 threading.Thread(target=questions, name="question_thread").start()
 

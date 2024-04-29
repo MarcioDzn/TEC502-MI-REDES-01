@@ -17,7 +17,6 @@ services:
     ports:
       - "8080:8080"
       - "5000:5000/udp"
-      - "3000:3000"
 
   server:
     build: 
@@ -25,7 +24,7 @@ services:
     networks:
       - iot-network
     ports:
-      - "3000:3000"
+      - "3002:3002"
     environment:
       - BROKER_IP=<IP REAL DO BROKER>
       - DEVICE_NAME=<NOME DO DISPOSITIVO>

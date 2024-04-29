@@ -1,9 +1,13 @@
 package com.pbl.broker.Broker.services;
 
+import com.pbl.broker.Broker.models.DeviceModel;
 import com.pbl.broker.Broker.models.ResponseModel;
+import com.pbl.broker.Broker.repositories.DevicesRepository;
 import com.pbl.broker.Broker.repositories.ResponseRepository;
 import com.pbl.broker.Broker.socket.SocketServer;
 
+import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.List;
 
 public class BrokerService {
@@ -19,11 +23,16 @@ public class BrokerService {
         return response;
     }
 
-    public void sendSensorReq(Long id, String command) {
-        command = "command::" + command;
-        String address = ResponseRepository.getKeyItem(id);
+    public void sendSensorReq(Long id, String command) throws UnknownHostException, IOException {
+        String ip = ResponseRepository.getKeyItem(id);
+        DeviceModel device = DevicesRepository.getDevice(ip);
 
-        SocketServer.sendMessageToClient(address, command);
+        SocketServer.sendMessageToClient(device.getIp(), device.getPort(), command);
+    }
 
+    public void addDevice(String ip, int port) {
+        DeviceModel device = new DeviceModel(ip, port, false);
+    
+        DevicesRepository.addDevice(ip, device);
     }
 }
