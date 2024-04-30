@@ -8,6 +8,7 @@ import com.pbl.broker.Broker.socket.SocketServer;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.net.SocketTimeoutException;
 import java.util.List;
 
 public class BrokerService {
@@ -23,7 +24,7 @@ public class BrokerService {
         return response;
     }
 
-    public void sendSensorReq(Long id, String command) throws UnknownHostException, IOException {
+    public void sendSensorReq(Long id, String command) throws IOException, SocketTimeoutException {
         String ip = ResponseRepository.getKeyItem(id);
         DeviceModel device = DevicesRepository.getDevice(ip);
 

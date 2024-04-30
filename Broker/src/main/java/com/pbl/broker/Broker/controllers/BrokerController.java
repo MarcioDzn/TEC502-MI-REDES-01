@@ -5,9 +5,11 @@ import com.pbl.broker.Broker.models.RequestModel;
 import com.pbl.broker.Broker.models.ResponseModel;
 import com.pbl.broker.Broker.services.BrokerService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.util.List;
 
 @RestController
@@ -35,7 +37,9 @@ public class BrokerController {
             service.sendSensorReq(id, request.getCommand());
             return ResponseEntity.ok().build();
 
-        } catch (IOException e) {
+        } catch (SocketTimeoutException e) {
+            return ResponseEntity.status(HttpStatus.REQUEST_TIMEOUT).build();
+        } catch (IOException e ) {
             return ResponseEntity.notFound().build();
         }
     }

@@ -54,9 +54,6 @@ public class SocketServer {
                         sendMessageToClient(device.getIp(), device.getPort(), "first_conn " + device.getIp());
                         device.setConnected(true);
                         System.out.println("Dispositivo do ip " + device.getIp() + " conectado com sucesso!");
-    
-                    } catch (UnknownHostException e) {
-                        System.out.println("Não foi possível conectar-se ao dispositivo de ip: " + device.getIp());
                     } catch (SocketTimeoutException e) {
                         System.out.println("Timeout excedido: " + e.getMessage());
                     } catch (IOException e ) {
@@ -70,9 +67,9 @@ public class SocketServer {
 
     }
 
-    public static void sendMessageToClient(String ip, int port, String message) throws UnknownHostException, IOException {
+    public static void sendMessageToClient(String ip, int port, String message) throws SocketTimeoutException, IOException {
         Socket socket = new Socket(ip, port);
-        socket.setSoTimeout(10 * 1000); 
+        socket.setSoTimeout(10000); 
         System.out.println("Conexão estebelecida com sucesso!\nEnviando mensagem!");
         PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
 
