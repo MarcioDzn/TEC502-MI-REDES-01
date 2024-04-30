@@ -57,8 +57,10 @@ public class SocketServer {
     
                     } catch (UnknownHostException e) {
                         System.out.println("Não foi possível conectar-se ao dispositivo de ip: " + device.getIp());
+                    } catch (SocketTimeoutException e) {
+                        System.out.println("Timeout excedido: " + e.getMessage());
                     } catch (IOException e ) {
-                        e.printStackTrace();
+                        System.out.println("Não foi possível conectar-se ao dispositivo de ip: " + device.getIp());
                     }
                 }
             }
@@ -70,6 +72,7 @@ public class SocketServer {
 
     public static void sendMessageToClient(String ip, int port, String message) throws UnknownHostException, IOException {
         Socket socket = new Socket(ip, port);
+        socket.setSoTimeout(10 * 1000); 
         System.out.println("Conexão estebelecida com sucesso!\nEnviando mensagem!");
         PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
 
@@ -91,13 +94,11 @@ public class SocketServer {
                 // cada mensagem recebida é processada em uma thread específica
                 new Thread(() -> {
                     String message = new String(packet.getData(), 0, packet.getLength());
-                    String senderIp = packet.getAddress().getHostAddress();
-                    int id = DevicesRepository.getIdByDevice(senderIp);
-
+  
                     Map<String, String> responseSplitted = ResponseSplit.splitResponse(message);
 
                     String responseType = responseSplitted.get("type");
-                    
+                    int id = DevicesRepository.getIdByDevice(responseSplitted.get("ip"));
 
                     if (responseType.equals("data")) {
                         ResponseModel response = new ResponseModel(id, responseSplitted.get("name"), responseSplitted.get("ip"), responseSplitted.get("time"), responseSplitted.get("time"),  responseSplitted.get("data"), responseSplitted.get("status"));
@@ -105,7 +106,7 @@ public class SocketServer {
                         ResponseRepository.addResponse(responseSplitted.get("ip"), response);
 
                     } else if (responseType.equals("alive_check")) {
-                        ResponseModel response = ResponseRepository.getResponse(senderIp);
+                        ResponseModel response = ResponseRepository.getResponse(responseSplitted.get("ip"));
 
                         if (response != null) {
                             response.setAliveTime(responseSplitted.get("time"));

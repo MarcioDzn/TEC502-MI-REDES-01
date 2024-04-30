@@ -1,8 +1,8 @@
 import { SensorCard } from "../../components/SensorCard/SensorCard";
 import { useQuery } from '@tanstack/react-query';
-import { getDevices, setDeviceOffline, setDeviceOnline } from "../../services/deviceService";
+import { addDevice, getDevices, setDeviceOffline, setDeviceOnline } from "../../services/deviceService";
 import {useEffect, useState} from "react"
-import { DeviceList, HomeContainer } from "./HomeStyled";
+import { DeviceList, HeaderContainer, HomeContainer } from "./HomeStyled";
 import { ControlPanel } from "../../components/ControlPanel/ControlPanel";
 import { useMutation } from '@tanstack/react-query';
 
@@ -22,6 +22,10 @@ export function Home() {
         mutationFn: setDeviceOnline
     })
 
+    const {mutate: setAddDeviceMutation, isPending: isPendingAddDeviceMutation} = useMutation({
+        mutationFn: addDevice
+    })
+
     useEffect(() => {
         const id = setInterval(() => {
             refetch();
@@ -39,9 +43,23 @@ export function Home() {
         }
     }
 
+    function handleSubmit(ip) {
+        setAddDeviceMutation(ip, 3000)
+    }
+
     return (
         <HomeContainer>
-            <h1>Dispositivos</h1>
+            <HeaderContainer>
+                <h1>Dispositivos</h1>
+
+                <form onSubmit={(event) => {
+                        event.preventDefault();
+                        handleSubmit(document.getElementById("inputAddDevice").value)
+                    }}>
+                    <input type="text" id="inputAddDevice"/>
+                    <button type="submit">Adicionar</button>
+                </form>
+            </HeaderContainer>
 
             <div>
                 <DeviceList>

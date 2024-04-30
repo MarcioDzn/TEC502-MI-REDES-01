@@ -25,7 +25,6 @@ public class BrokerService {
 
     public void sendSensorReq(Long id, String command) throws UnknownHostException, IOException {
         String ip = ResponseRepository.getKeyItem(id);
-        System.out.println(ip);
         DeviceModel device = DevicesRepository.getDevice(ip);
 
         SocketServer.sendMessageToClient(device.getIp(), device.getPort(), command);

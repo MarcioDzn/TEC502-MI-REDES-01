@@ -21,3 +21,12 @@ export function setDeviceOnline(id) {
     }
     axios.patch(`${baseURL}/api/sensor/${id}`, body);
 }
+
+export function addDevice(ip, ip2) {
+    const port = 3000
+    const body = {
+        ip: ip,
+        port: port
+    }
+    axios.post(`${baseURL}/api/sensor`, body);
+}
