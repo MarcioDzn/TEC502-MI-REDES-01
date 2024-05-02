@@ -37,7 +37,9 @@ export const HeaderContainer = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
+`
 
+export const Form = styled.form`
     button {
         outline: none;
         border: 1px solid #eeeeff;
@@ -61,4 +63,12 @@ export const HeaderContainer = styled.div`
         background-color: white;
         border-radius: 5px 0px 0px 5px;
     }
+`
+
+export const BrokerControlContainer = styled.div`
+    height: fit-content !important;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    gap: 10px;
 `

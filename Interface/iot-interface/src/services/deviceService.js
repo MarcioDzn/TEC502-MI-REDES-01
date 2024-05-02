@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const baseURL = "http://localhost:8080"
+const brokerIp = localStorage.getItem("broker_ip");
+const baseURL = `http://${brokerIp ? brokerIp : "localhost"}:8080`
 
 export function getDevices() {
     const response = axios.get(`${baseURL}/api/sensor`);

@@ -2,7 +2,7 @@ import { SensorCard } from "../../components/SensorCard/SensorCard";
 import { useQuery } from '@tanstack/react-query';
 import { addDevice, getDevices, setDeviceOffline, setDeviceOnline } from "../../services/deviceService";
 import {useEffect, useState} from "react"
-import { DeviceList, HeaderContainer, HomeContainer } from "./HomeStyled";
+import { BrokerControlContainer, DeviceList, Form, HeaderContainer, HomeContainer } from "./HomeStyled";
 import { ControlPanel } from "../../components/ControlPanel/ControlPanel";
 import { useMutation } from '@tanstack/react-query';
 
@@ -47,18 +47,31 @@ export function Home() {
         setAddDeviceMutation(ip, 3000)
     }
 
+    function handleActiveBroker(ip) {
+        localStorage.setItem("broker_ip", ip);
+    }
+
     return (
         <HomeContainer>
+            <BrokerControlContainer>
+                <Form onSubmit={(event) => {
+                        handleActiveBroker(document.getElementById("inputActiveBroker").value)
+                    }}>
+                    <input type="text" id="inputActiveBroker"/>
+                    <button type="submit">Ativar Broker</button>
+                </Form>
+            </BrokerControlContainer>
+
             <HeaderContainer>
                 <h1>Dispositivos</h1>
 
-                <form onSubmit={(event) => {
+                <Form onSubmit={(event) => {
                         event.preventDefault();
                         handleSubmit(document.getElementById("inputAddDevice").value)
                     }}>
                     <input type="text" id="inputAddDevice"/>
                     <button type="submit">Adicionar</button>
-                </form>
+                </Form>
             </HeaderContainer>
 
             <div>
