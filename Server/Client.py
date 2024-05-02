@@ -32,49 +32,7 @@ class Client:
                     print("Conexão estabelecida com o broker")
                 else:
                     self.device.handle_requests(data)
-
-
-
-
-
-        
-        # server_on = False
-        # while True:
-        #     try:
-        #         # reconecta o client ao broker
-        #         while not server_on:
-        #             try:
-        #                 print("\nTentando conectar-se ao broker...")
-        #                 
-
-        #                 client_sock_tcp.connect(self.address)
-
-        #                 server_on = True
-        #                 print("\nConexão realizada com sucesso!\n")
-
-        #             except Exception as e:
-        #                 print("\n[ERRO AO TENTAR REALIZAR A CONEXÃO]")
-
-        #             sleep(3) # 3 segundos 
-
-
-        #         request = client_sock_tcp.recv(1024).decode().strip() 
-
-        #         if not request:
-        #             server_on = False
-                
-        #         command = request.split("::")[1]
-        #         self.device.handle_requests(command)
-
-        #     except ConnectionResetError:
-        #         server_on = False
-
-        #     except Exception as e:
-        #         server_on = False
-        #         print("\n\n[ERRO COM A CONEXÃO]")
-                
-
-        client_sock_tcp.close()    
+   
 
     def send_alive_check(self, sock):
         while not self.isConnected:
