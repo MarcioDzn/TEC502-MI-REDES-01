@@ -14,7 +14,7 @@ class Client:
 
     def handle_tcp_connection(self):   
         sock_tcp = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock_tcp.bind(("0.0.0.0", 3000))
+        sock_tcp.bind(("0.0.0.0", 3002))
 
         sock_tcp.listen(1)   
   
@@ -78,10 +78,3 @@ class Client:
 
             except Exception as e:
                 print("\n[ERRO AO ENVIAR DADO MEDIDO]")
-
-
-# device = AirConditioner("Temperatura")
-# client = Client(("localhost", 3000), device)
-
-# threading.Thread(target=client.send_response, name="udp_sender").start()
-# client.receive_data()

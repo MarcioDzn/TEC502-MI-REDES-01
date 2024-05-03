@@ -24,7 +24,7 @@ export function setDeviceOnline(id) {
 }
 
 export function addDevice(ip, ip2) {
-    const port = 3000
+    const port = 3002
     const body = {
         ip: ip,
         port: port

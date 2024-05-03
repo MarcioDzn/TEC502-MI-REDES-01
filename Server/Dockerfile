@@ -10,7 +10,7 @@ WORKDIR /app
 # Define a variável de ambiente padrão
 ENV BROKER_IP="localhost"
 
-EXPOSE 3000
+EXPOSE 3002
 
 # Comando para executar o script Python
 CMD ["python", "main.py"]
