@@ -207,7 +207,7 @@ Para que a interface se comunique com o broker, é necessário adicionar o IP da
 
 <div align="center">
   <img src="media/ativar_broker.png" alt="Campo para ativar broker" height="45px" width="auto" />
-  <br/> <em>Figura 3. Campo para adicionar um dispositivo.</em> <br/>
+  <br/> <em>Figura 3. Campo para adicionar o broker.</em> <br/>
 </div>
 
 #### Adicionar dispositivo
@@ -217,7 +217,7 @@ Caso a máquina em questão não esteja executando o dispositivo, ou o IP seja i
 
 <div align="center">
   <img src="media/adicionar_dispositivo.png" alt="Campo para adicionar dispositivo" height="60px" width="auto" />
-  <br/> <em>Figura 4. Campo para adicionar o broker.</em> <br/>
+  <br/> <em>Figura 4. Campo para adicionar um dispositivo.</em> <br/>
 </div>
 
 #### Ligar/Desligar dispositivo
