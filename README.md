@@ -47,7 +47,7 @@ Ademais, essa classe também contém atributos que guardam informações importa
 A comunicação entre o dispositivo e o broker é realizada a partir de sockets, via protocolo TCP/IP, para recebimento de informações ou UDP para envio de dados.
 
 #### Comunicação TCP
-Ao iniciar o dispositivo, um servidor socket de fluxo (TCP) no IP `0.0.0.0` e na porta `3000` é iniciado, o qual permite que o broker estabeleça uma conexão e envie comandos, via protocolo TCP.  Assim que um comando é recebido e interpretado a conexão é fechada.
+Ao iniciar o dispositivo, um servidor socket de fluxo (TCP) no IP `0.0.0.0` e na porta `3002` é iniciado, o qual permite que o broker estabeleça uma conexão e envie comandos, via protocolo TCP.  Assim que um comando é recebido e interpretado a conexão é fechada.
 
 O primeiro dado que um dispositivo deve receber é o de primeira conexão, representado pela string `first_conn`, acompanhada do IP da máquina que executa o próprio dispositivo. Após o recebimento desta informação, o dispositivo é liberado para enviar dados ao broker. 
 
@@ -174,7 +174,7 @@ A função `sendDeviceTCPConnection`, na classe `SocketServer` é responsável p
 
 Para realizar o envio de informações do broker para o dispositivo fez-se necessário utilizar o protocolo TCP. A função responsável por realizar o envio é a `sendMessageToClient`.
 
-Dessa forma, sempre que deseja-se enviar tais dados, uma conexão é realizada entre o broker e um dispositivo em específico, a partir de seu IP, na porta `3000`. Após o dado ser enviado com sucesso, a conexão é fechada apropriadamente. 
+Dessa forma, sempre que deseja-se enviar tais dados, uma conexão é realizada entre o broker e um dispositivo em específico, a partir de seu IP, na porta `3002`. Após o dado ser enviado com sucesso, a conexão é fechada apropriadamente. 
 
 Caso não seja possível estabelecer a conexão, a fim de enviar um dado, uma exceção é gerada.
 
@@ -250,7 +250,7 @@ Ademais, a fim de garantir que as execuções ocorram sem erros, os sistemas dev
 
 Broker
 1. Navegue até o diretório principal.
-Execute o comando: 
+2. Execute o comando: 
 ```bash
 docker compose up broker –build
 ```
@@ -262,7 +262,7 @@ Interface
 ```bash
 docker compose up client –build
 ```
-3. Acesse a aplicação em [http://localhost:3001](http://localhost:3001)
+3. Acesse a aplicação em [http://localhost:3000](http://localhost:3000)
 
 Dispositivo
 1. Navegue até a pasta do dispositivo: 
@@ -277,6 +277,6 @@ docker build -t <nome_da_imagem> .
 3. Execute o comando: 
 
 ```bash
-docker container run -it -p 3000:3000 -e BROKER_IP=<ip_do_broker> -e DEVICE_NAME=<nome_do_dispositivo> <nome_da_imagem>
+docker container run -it -p 3002:3002 -e BROKER_IP=<ip_do_broker> -e DEVICE_NAME=<nome_do_dispositivo> <nome_da_imagem>
 ```
 
