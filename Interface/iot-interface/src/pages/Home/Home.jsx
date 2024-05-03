@@ -57,7 +57,7 @@ export function Home() {
                 <Form onSubmit={(event) => {
                         handleActiveBroker(document.getElementById("inputActiveBroker").value)
                     }}>
-                    <input type="text" id="inputActiveBroker"/>
+                    <input type="text" id="inputActiveBroker" placeholder="IP do Broker"/>
                     <button type="submit">Ativar Broker</button>
                 </Form>
             </BrokerControlContainer>
@@ -68,9 +68,10 @@ export function Home() {
                 <Form onSubmit={(event) => {
                         event.preventDefault();
                         handleSubmit(document.getElementById("inputAddDevice").value)
+                        document.getElementById("inputAddDevice").value = ""
                     }}>
-                    <input type="text" id="inputAddDevice"/>
-                    <button type="submit">Adicionar</button>
+                    <input type="text" id="inputAddDevice" placeholder="IP do dispositivo"/>
+                    <button type="submit">Adicionar dispositivo</button>
                 </Form>
             </HeaderContainer>
 

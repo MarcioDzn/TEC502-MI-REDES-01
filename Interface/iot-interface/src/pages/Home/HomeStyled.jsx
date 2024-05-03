@@ -62,6 +62,10 @@ export const Form = styled.form`
         border: 1px solid #eeeeff;
         background-color: white;
         border-radius: 5px 0px 0px 5px;
+
+        &::placeholder {
+            color: #d1d1d1;
+        }
     }
 `
 
