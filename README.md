@@ -241,7 +241,7 @@ Para estabelecer a comunicação TCP com um dispositivo em específico é necess
 
 Em seguida, um objeto do tipo `DeviceModel` é criado, contendo as informações de IP e porta. Esse objeto é adicionado ao hashmap `DevicesRepository`, cuja chave é o IP do dispositivo e o conteúdo é o objeto do tipo `DeviceModel`.
 
-Já no dispositivo, um servidor socket TCP é aberto, no método `handle_tcp_connect`, a fim de realizar as devidas conexões, quando necessário. Quando uma conexão TCP ocorre e uma mensagem é recebida e processada, a conexão logo é fechada.
+Já no dispositivo, um servidor socket TCP é aberto, no método `handle_tcp_connect`, a fim de realizar as devidas conexões, quando necessário. O IP utilizado é `"0.0.0.0"`, para aceitar conexões de qualquer endereço IP, e a porta, é fixa, sendo ela `3002`. Quando uma conexão TCP ocorre e uma mensagem é recebida e processada, a conexão logo é fechada.
 
 #### Dispositivo para o Broker
 Para realizar o envio de dados do dispositivo para o broker utilizou-se um socket, a partir do protocolo UDP, conhecido por ser não confiável, mas rápido. A escolha desse protocolo deve-se ao fato de que os dados do dispositivos são enviados a todo momento, não representando grandes problemas se algumas informações forem perdidas.
@@ -363,7 +363,7 @@ Caso o cabo da máquina executando um dos dispositivos seja removido, ele não c
 A partir disso, não é possível enviar comandos para este dispositivo via protocolo TCP. Somente quando o cabo é reconectado, o dispositivo volta a enviar informações, indicando que está conectado à rede novamente.
 
 #### Broker
-Se o cabo da máquina executando o broker for removido, não será possível receber dados de nenhum dispositivo conectado. Assim, todos os aparelhos são marcados como "diconnected", indicando que, para o broker, estão desconectados.
+Se o cabo da máquina executando o broker for removido, não será possível receber dados de nenhum dispositivo conectado. Assim, todos os aparelhos tem seus status alterados para "*disconnected*", indicando que, para o broker, estão desconectados da rede.
 
 Quando o cabo é reconectado, as informações voltam a chegar normalmente, e os dispositivos retomam o envio de dados, como antes.
 
@@ -371,6 +371,6 @@ Quando o cabo é reconectado, as informações voltam a chegar normalmente, e os
 ### Conclusão
 O sistema cumpre com os requisitos propostos, sendo capaz de utilizar protocolos de comunicação adequados para cada situação. Nesse sentido, por meio da utilização de uma API REST, com o protocolo HTTP, é possível que o cliente comunique-se com o broker adequadamente. Ademais, a partir do uso dos protocolos UDP e TCP/IP, a comunicação entre o broker e os dispositivos é garantida.
 
-Além disso, o sistema lida com situações de erro relacionado à falha na rede, o qual impacta a comunicação. Dessa forma, caso o cabo de rede seja desconectado, o sistema aguarda até a reconexão aprqa que as comunicações voltem a funcionar.
+Além disso, o sistema lida com situações de erro relacionado à falha na rede, o qual impacta a comunicação. Dessa forma, caso o cabo de rede seja desconectado, o sistema aguarda até a reconexão para que as comunicações voltem a funcionar.
 
 Por fim, para executar o sistema em diversas máquinas e ambientes, utilizou-se a ferramenta Docker.
