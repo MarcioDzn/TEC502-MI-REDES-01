@@ -1,18 +1,100 @@
-# TEC502 - Sistema IoT
+<div align="center">
+<h1>TEC502 - Sistema IoT</h1>
+</div>
 
-### Projeto
+A Internet das Coisas (IoT) permite a integração de dispositivos diversos, conectando elementos que vão desde a vida cotidiana até sistemas complexos empresariais. Entretanto, o gerenciamento de dispositivos IoT não é uma tarefa simples, pois envolve desafios de concorrência e conectividade. Este trabalho apresenta um sistema que facilita a comunicação entre diversos dispositivo e aplicações que necessitam de seus dados. O sistema permite a adição e manipulação de dispositivos de maneira eficiente a partir de uma interface remota, utilizando  *Sockets*, *frameworks* para criação de API REST e *threads*.
+
+Para que o projeto funcione corretamente, fez-se necessário utilizar determinados protocolos de comunicação, como UDP, TCP/IP e HTTP. A partir desses protocolos é possível estabelecer uma comunicação coerente e eficiente entre os elementos do sistema, como a interface, os dispositivos e o broker. O broker é o elemento central da aplicação, pois regula as comunicações com os dispositivos e a interface remota.
+
+O projeto foi desenvolvido a partir de ferramentas como: Java, para a criação do broker; Python, para a construção do dispositivo; React, para o desenvolvimento da interface; e Docker, para a execução dos módulos. Ademais, frameworks também foram utilizados, como Spring Boot, para a construção de APIs REST.
+
+### Tópicos
+- [Como executar?](#como-executar)
+  - [Broker](#broker)
+  - [Interface](#interface)
+  - [Dispositivo](#dispositivo)
+- [Organização do Projeto](#organização-do-projeto)
+- [Dispositivo](#dispositivo-1)
+  - [Arquitetura do Dispositivo](#arquitetura-do-dispositivo)
+  - [Device e AirConditioner](#interface)
+  - [Client](#client)
+  - [Gerenciamento](#gerenciamento)
+- [API](#api)
+  - [Arquitetura](#arquitetura)
+- [Broker](#broker)
+  - [Arquitetura](#arquitetura-1)
+  - [Cadastro de dispositivos](#cadastro-de-dispositivos)
+  - [Conexão inicial do dispositivo](#conexão-inicial-do-dispositivo)
+  - [Validação dos Dispositivos](#validação-dos-dispositivos)
+- [Comunicação](#comunicação)
+  - [Cliente para o Broker (API)](#cliente-para-o-broker-api)
+    - [Rotas](#rotas)
+  - [Broker para o dispositivo](#broker-para-o-dispositivo)
+  - [Dispositivo para o broker](#dispositivo-para-o-broker)
+  - [Protocolos de comunicação](#dispositivo-para-o-broker)
+    - [Dispositivo para o broker](#dispositivo-para-o-broker-1)
+    - [Broker para o dispositivo](#dispositivo-para-o-broker-1)
+- [Interface gráfica](#interface-gráfica)
+  - [Adicionar Broker](#adicionar-broker)
+  - [Adicionar dispositivo](#adicionar-dispositivo)
+  - [Adicionar Broker](#adicionar-broker)
+- [Desempenho](#desempenho)
+- [Conexões simultaneas](#conexões-simultaneas)
+- [Confiabilidade](#confiabilidade)
+  - [Dispositivo](#dispositivo-2)
+  - [Broker](#broker-2)
+- [Conclusão](#conclusão)
+
+
+### Como executar?
+Para poder manipular corretamente os dispositivos, bem como visualizar os valores gerados por eles, é necessário executar três sistemas principais, de preferência em máquinas diferentes.
+
+Ademais, a fim de garantir que as execuções ocorram sem erros, os sistemas devem ser executados em containers docker. 
+
+#### Broker
+1. Navegue até o diretório principal.
+2. Execute o comando: 
+```bash
+docker compose up broker –build
+```
+
+#### Interface 
+1. Navegue até o diretório principal.
+2. Execute o comando: 
+```bash
+docker compose up client –build
+```
+3. Acesse a aplicação em [http://localhost:3000](http://localhost:3000)
+
+#### Dispositivo
+1. Navegue até o diretório do dispositivo: 
+```bash
+cd Server/
+```
+
+2. Crie a imagem docker: 
+```bash
+docker build -t <nome_da_imagem> .
+```
+3. Execute o comando: 
+
+```bash
+docker container run -it -p 3002:3002 -e BROKER_IP=<ip_do_broker> -e DEVICE_NAME=<nome_do_dispositivo> <nome_da_imagem>
+```
+
+### Organização do Projeto
 O projeto é dividido em 3 pastas principais:
 - Dispositivo (Server)
     - Contém os arquivos referentes ao dispositivo, o qual simula um aparelho IoT real, desenvolvido em Python.
 - Broker (Broker)
-    - Contém os arquivos referentes ao serviço de mensageria que possibilita a troca de mensagens entre a interface gráfica e o dispositivo. Foi desenvolvido em Java utilizando o framework SpringBoot.
+    - Contém os arquivos referentes ao serviço de mensageria que possibilita a troca de mensagens entre a interface gráfica e o dispositivo.
 - Interface (Interface/iot-interface)
-    - Contém os arquivos referentes à interface gráfica, a qual permite a manipulação do dispositivo pelo usuário, de maneira remota. Foi desenvolvido em HTML, CSS e JavaScript, a partir do framework ReactJS.
+    - Contém os arquivos referentes à interface gráfica, a qual permite a manipulação do dispositivo pelo usuário, de maneira remota.
 
 ### Dispositivo
 Os dispositivos são parte fundamental do projeto, pois geram dados que são enviados ao broker e mais tarde adquiridos pelo cliente final. Cada dispositivo pode ser manipulado por comandos advindos de um meio externo (broker) ou de uma interface local.
 
-### Arquitetura do Dispositivo
+#### Arquitetura do Dispositivo
 Os arquivos referentes ao dispositivo são:
 - `AirConditioner`: representa uma especificação do dispositivo.
 - `Device`: representa o dispositivo em si.
@@ -286,41 +368,9 @@ Se o cabo da máquina executando o broker for removido, não será possível rec
 Quando o cabo é reconectado, as informações voltam a chegar normalmente, e os dispositivos retomam o envio de dados, como antes.
 
 
-### Como executar?
+### Conclusão
+O sistema cumpre com os requisitos propostos, sendo capaz de utilizar protocolos de comunicação adequados para cada situação. Nesse sentido, por meio da utilização de uma API REST, com o protocolo HTTP, é possível que o cliente comunique-se com o broker adequadamente. Ademais, a partir do uso dos protocolos UDP e TCP/IP, a comunicação entre o broker e os dispositivos é garantida.
 
-Para poder manipular corretamente os dispositivos, bem como visualizar os valores gerados por eles, é necessário executar três sistemas principais, de preferência em máquinas diferentes.
+Além disso, o sistema lida com situações de erro relacionado à falha na rede, o qual impacta a comunicação. Dessa forma, caso o cabo de rede seja desconectado, o sistema aguarda até a reconexão aprqa que as comunicações voltem a funcionar.
 
-Ademais, a fim de garantir que as execuções ocorram sem erros, os sistemas devem ser executados em containers docker. 
-
-#### Broker
-1. Navegue até o diretório principal.
-2. Execute o comando: 
-```bash
-docker compose up broker –build
-```
-
-
-#### Interface 
-1. Navegue até o diretório principal.
-2. Execute o comando: 
-```bash
-docker compose up client –build
-```
-3. Acesse a aplicação em [http://localhost:3000](http://localhost:3000)
-
-#### Dispositivo
-1. Navegue até a pasta do dispositivo: 
-```bash
-cd Server/
-```
-
-2. Crie a imagem docker: 
-```bash
-docker build -t <nome_da_imagem> .
-```
-3. Execute o comando: 
-
-```bash
-docker container run -it -p 3002:3002 -e BROKER_IP=<ip_do_broker> -e DEVICE_NAME=<nome_do_dispositivo> <nome_da_imagem>
-```
-
+Por fim, para executar o sistema em diversas máquinas e ambientes, utilizou-se a ferramenta Docker.
