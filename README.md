@@ -344,15 +344,15 @@ Se o botão estiver desabilitado o dispositivo não está em execução ou a con
 </div>
 
 
-### Desempenho
-Nenhum mecanismo de desempenho foi utilizado no projeto.
-
 ### Conexões simultaneas
 Um problema que podeira ocorrer durante o recebimento de dados pelo Broker é o programa ficar ocupado processando um dado enquanto outro chega. Caso isso ocorresse, o dado que chegou poderia ser perdido.
 
 Nesse sentido, devido à necessidade de garantir que os todos os dados recebidos via UDP pelo Broker fossem processados adequadamente, necessitou-se fazer o uso de threads.
 
 Logo, assim que um dado chega ao Broker, na função `receiveMessage`, uma nova thread é criada para lidar com seu processamento. Dessa forma, o programa pode receber novos dados ao mesmo tempo em que processa os que já chegaram, envitando perda de informações.
+
+### Desempenho
+Um mecanismo de desempenho empregado foi, como mencionado em [Conexões simultaneas](#conexões-simultaneas), a utilização de threads para o processamento de dados que chegam via UDP no broker. A partir disso, vários dados recebidos podem ser interpretados e armazenados simultâneamente, sem a necessidade de que um espere o outro terminar.
 
 ### Confiabilidade
 Para que o sistema funcione corretamente, fez-se necessário lidar com situações adversas, como a falha no cabo de nós executando partes do sistema.
