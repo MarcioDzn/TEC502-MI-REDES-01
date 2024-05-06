@@ -107,6 +107,7 @@ public class SocketServer {
 
                         if (response != null) {
                             response.setAliveTime(responseSplitted.get("time"));
+                            response.setStatus(responseSplitted.get("status"));
 
                         } else {
                             response = new ResponseModel(id, responseSplitted.get("name"), responseSplitted.get("ip"), responseSplitted.get("time"), responseSplitted.get("time"), "offline", "offline");
