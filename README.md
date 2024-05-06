@@ -15,17 +15,21 @@ O projeto foi desenvolvido a partir de ferramentas como: Java, para a criação 
   - [Dispositivo](#dispositivo)
 - [Organização do Projeto](#organização-do-projeto)
 - [Dispositivo](#dispositivo-1)
+  - [Funcionamento geral](#funcionamento-geral)
   - [Arquitetura do Dispositivo](#arquitetura-do-dispositivo)
   - [Device e AirConditioner](#interface)
   - [Client](#client)
   - [Gerenciamento](#gerenciamento)
+  - [Threads](#threads)
 - [API](#api)
   - [Arquitetura](#arquitetura)
 - [Broker](#broker)
+  - [Funcionamento geral](#funcionamento-geral-1)
   - [Arquitetura](#arquitetura-1)
   - [Cadastro de dispositivos](#cadastro-de-dispositivos)
   - [Conexão inicial do dispositivo](#conexão-inicial-do-dispositivo)
   - [Validação dos Dispositivos](#validação-dos-dispositivos)
+  - [Threads](#threads-1)
 - [Comunicação](#comunicação)
   - [Cliente para o Broker (API)](#cliente-para-o-broker-api)
     - [Rotas](#rotas)
@@ -38,8 +42,8 @@ O projeto foi desenvolvido a partir de ferramentas como: Java, para a criação 
   - [Adicionar Broker](#adicionar-broker)
   - [Adicionar dispositivo](#adicionar-dispositivo)
   - [Adicionar Broker](#adicionar-broker)
+- [Conexões simultâneas](#conexões-simultâneas)
 - [Desempenho](#desempenho)
-- [Conexões simultaneas](#conexões-simultaneas)
 - [Confiabilidade](#confiabilidade)
   - [Dispositivo](#dispositivo-2)
   - [Broker](#broker-2)
@@ -94,6 +98,12 @@ O projeto é dividido em 3 pastas principais:
 ### Dispositivo
 Os dispositivos são parte fundamental do projeto, pois geram dados que são enviados ao broker e mais tarde adquiridos pelo cliente final. Cada dispositivo pode ser manipulado por comandos advindos de um meio externo (broker) ou de uma interface local.
 
+#### Funcionamento geral
+<div align="center">
+  <img src="media/funcionamento_dispositivo.png" alt="funcionamento geral do dispositivo" height="500px" width="auto" />
+  <br/> <em>Figura 1. Funcionamento geral do dispositivo.</em> <br/>
+</div>
+
 #### Arquitetura do Dispositivo
 Os arquivos referentes ao dispositivo são:
 - `AirConditioner`: representa uma especificação do dispositivo.
@@ -136,7 +146,7 @@ A interface local do dispositivo, exibida no próprio terminal, permite que o us
 
 <div align="center">
   <img src="media/interface_local.png" alt="Interface local do dispositivo" height="100px" width="auto" />
-  <br/> <em>Figura 1. Interface local.</em> <br/>
+  <br/> <em>Figura 2. Interface local.</em> <br/>
 </div>
 
 Já a interface remota, desenvolvida como uma página web, assim como a interface local também permite ligar e desligar o aparelho, não podendo alterar seu valor. 
@@ -156,11 +166,17 @@ A camada *Controller* contém funções que são executadas a depender de quando
 
 As funções da camada *Service* são responsáveis pela lógica de negócio das rotas. Dessa forma, podem acessar valores armazenados ou permitir o envio de dados via TCP.
 
-Por fim, a camada *Repository* armazena dados que **podem** ser retornados diretamente a partir de certas rotas da API, como os dados de sensores conectados.
+Por fim, a camada *Repository* armazena dados que podem ser retornados diretamente a partir de certas rotas da API, como as informações de dispositivos conectados.
 
 Ademais, para que a *API* funcione corretamente quando consumida através de uma interface gráfica no navegador, fez-se necessário configurar o CORS (*Cross-Origin Resource Sharing*). Dessa forma, a classe `CorsConfiguration`, no módulo cors, realiza os ajustes necessários, permitindo solicitações de qualquer origem e de qualquer método *HTTP*, como *GET*, *POST* e *PATCH*.
 
 ### Broker
+#### Funcionamento geral
+<div align="center">
+  <img src="media/funcionamento_broker.png" alt="funcionamento geral do broker" height="600px" width="auto" />
+  <br/> <em>Figura 3. Funcionamento geral do broker.</em> <br/>
+</div>
+
 #### Arquitetura
 - Pasta `models`
     - `DeviceModel`: contém informações referentes aos dispositivos.
@@ -311,7 +327,7 @@ A partir da interface é possível:
 
 <div align="center">
   <img src="media/interface_grafica_total.png" alt="Interface gráfica do dispositivo" height="300px" width="auto" />
-  <br/> <em>Figura 2. Visão geral da interface gráfica.</em> <br/>
+  <br/> <em>Figura 4. Visão geral da interface gráfica.</em> <br/>
 </div>
 
 
@@ -320,7 +336,7 @@ Para que a interface se comunique com o broker, é necessário adicionar o IP da
 
 <div align="center">
   <img src="media/ativar_broker.png" alt="Campo para ativar broker" height="45px" width="auto" />
-  <br/> <em>Figura 3. Campo para adicionar o broker.</em> <br/>
+  <br/> <em>Figura 5. Campo para adicionar o broker.</em> <br/>
 </div>
 
 #### Adicionar dispositivo
@@ -330,7 +346,7 @@ Caso a máquina em questão não esteja executando o dispositivo, ou o IP seja i
 
 <div align="center">
   <img src="media/adicionar_dispositivo.png" alt="Campo para adicionar dispositivo" height="60px" width="auto" />
-  <br/> <em>Figura 4. Campo para adicionar um dispositivo.</em> <br/>
+  <br/> <em>Figura 6. Campo para adicionar um dispositivo.</em> <br/>
 </div>
 
 #### Ligar/Desligar dispositivo
@@ -342,29 +358,29 @@ Se o botão estiver desabilitado o dispositivo não está em execução ou a con
 
 <div align="center">
   <img src="media/power_ligado.png" alt="DIspositivo ligado" height="200px" width="auto" />
-  <br/> <em>Figura 5. Dispositivo ligado.</em> <br/> <br/>
+  <br/> <em>Figura 7. Dispositivo ligado.</em> <br/> <br/>
 </div>
 
 <div align="center">
   <img src="media/power_desligado.png" alt="Dispositivo desligado" height="200px" width="auto" />
-  <br/> <em>Figura 6. Dispositivo desligado.</em> <br/> <br/>
+  <br/> <em>Figura 8. Dispositivo desligado.</em> <br/> <br/>
 </div>
 
 <div align="center">
   <img src="media/power_desconectado.png" alt="Dispositivo desconectado" height="193px" width="auto" />
-  <br/> <em>Figura 7. Dispositivo desconectado.</em> <br/> <br/>
+  <br/> <em>Figura 9. Dispositivo desconectado.</em> <br/> <br/>
 </div>
 
 
-### Desempenho
-Nenhum mecanismo de desempenho foi utilizado no projeto.
-
-### Conexões simultaneas
+### Conexões simultâneas
 Um problema que podeira ocorrer durante o recebimento de dados pelo Broker é o programa ficar ocupado processando um dado enquanto outro chega. Caso isso ocorresse, o dado que chegou poderia ser perdido.
 
 Nesse sentido, devido à necessidade de garantir que os todos os dados recebidos via UDP pelo Broker fossem processados adequadamente, necessitou-se fazer o uso de threads.
 
 Logo, assim que um dado chega ao Broker, na função `receiveMessage`, uma nova thread é criada para lidar com seu processamento. Dessa forma, o programa pode receber novos dados ao mesmo tempo em que processa os que já chegaram, envitando perda de informações.
+
+### Desempenho
+Para garantir um melhor desempenho durante a recepção de dados dos dispositivos pelo broker, utilizou-se threads. Nesse sentido, como mencionado em [Conexões simultâneas](#conexões-simultâneas), sempre que um novo dado chega, uma nova thread é criada para lidar com ele. Assim, múltiplos dados podem, caso necessário, ser processados ao mesmo tempo, de maneira eficiente.
 
 ### Confiabilidade
 Para que o sistema funcione corretamente, fez-se necessário lidar com situações adversas, como a falha no cabo de nós executando partes do sistema.
