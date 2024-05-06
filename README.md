@@ -120,7 +120,9 @@ A classe `Client`, é responsável por manipular os sockets, a partir de método
 - `handle_tcp_connection`: cria um socket servidor para receber conexões TCP e receber dados utilizando o protocolo TCP.
 
 Ademais, essa classe também contém atributos que guardam informações importantes, como:
-- `address`: endereço do broker
+- `ip`: endereço IP do broker
+- `tcp_port`: porta utilizada na conexão TCP
+- `udp_port`: porta utilizada no envio de dados via protocolo UDP
 - `device`: classe referente ao dispositivo em si
 - `isConnected`: valor booleano que indica se foi estabelecida uma conexão TCP com o broker
 - `deviceIp`: IP da máquina que está executando o dispositivo
@@ -246,7 +248,7 @@ Já no dispositivo, um servidor socket TCP é aberto, no método `handle_tcp_con
 #### Dispositivo para o Broker
 Para realizar o envio de dados do dispositivo para o broker utilizou-se um socket, a partir do protocolo UDP, conhecido por ser não confiável, mas rápido. A escolha desse protocolo deve-se ao fato de que os dados do dispositivos são enviados a todo momento, não representando grandes problemas se algumas informações forem perdidas.
 
-Por conta do tipo de protocolo, não é necessário estabelecer uma conexão entre o broker e o dispositivo. Dessa forma, os dados são simplesmente enviados, continuadamente, ao broker, a partir do IP e porta específicos da máquina que está executando-o. 
+Por conta do tipo de protocolo, não é necessário estabelecer uma conexão entre o broker e o dispositivo. Dessa forma, os dados são simplesmente enviados, continuadamente, ao broker, a partir do IP da máquina que está executando-o, na porta `5000`.
 
 Dois tipos de informação são enviados, uma contendo os dados "medidos" pelo dispositivo e outra contendo um aviso de atividade. O aviso de atividade é útil para informar ao broker que o dispositivo ainda está ativo. Ademais, a informação de dados é enviada a 0.5 segundo e a de aviso de atividade a cada 3 segundos.
 
@@ -344,15 +346,15 @@ Se o botão estiver desabilitado o dispositivo não está em execução ou a con
 </div>
 
 
+### Desempenho
+Nenhum mecanismo de desempenho foi utilizado no projeto.
+
 ### Conexões simultaneas
 Um problema que podeira ocorrer durante o recebimento de dados pelo Broker é o programa ficar ocupado processando um dado enquanto outro chega. Caso isso ocorresse, o dado que chegou poderia ser perdido.
 
 Nesse sentido, devido à necessidade de garantir que os todos os dados recebidos via UDP pelo Broker fossem processados adequadamente, necessitou-se fazer o uso de threads.
 
 Logo, assim que um dado chega ao Broker, na função `receiveMessage`, uma nova thread é criada para lidar com seu processamento. Dessa forma, o programa pode receber novos dados ao mesmo tempo em que processa os que já chegaram, envitando perda de informações.
-
-### Desempenho
-Um mecanismo de desempenho empregado foi, como mencionado em [Conexões simultaneas](#conexões-simultaneas), a utilização de threads para o processamento de dados que chegam via UDP no broker. A partir disso, vários dados recebidos podem ser interpretados e armazenados simultâneamente, sem a necessidade de que um espere o outro terminar.
 
 ### Confiabilidade
 Para que o sistema funcione corretamente, fez-se necessário lidar com situações adversas, como a falha no cabo de nós executando partes do sistema.

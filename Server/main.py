@@ -7,7 +7,7 @@ ip = os.getenv('BROKER_IP')
 name = os.getenv('DEVICE_NAME')
 
 device = AirConditioner(name)
-client = Client((ip, 3000), device)
+client = Client(ip, 3002, 5000, device)
 
 def questions():
     client.device.get_options()
