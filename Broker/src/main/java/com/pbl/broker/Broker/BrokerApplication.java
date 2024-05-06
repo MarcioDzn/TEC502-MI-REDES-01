@@ -21,12 +21,12 @@ public class BrokerApplication extends Thread{
 		// inicia o servidor
 		SocketServer.startServer();
 
-		// recebe continuadamente mensagens dos clients
+		// Thread que recebe continuadamente mensagens dos dispositivos via UDP
 		new Thread(() -> {
 			SocketServer.receiveMessage();
 		}).start();
 
-		// invalida a cada n segundos a conexão com o cliente, para verificar se ainda está online
+		// Thread que invalida a cada n segundos a conexão com o cliente, para verificar se ainda está online
 		new Thread(() -> {
 			try {
 				DeviceService.invalidateDeviceConnection();
@@ -34,12 +34,12 @@ public class BrokerApplication extends Thread{
 				throw new RuntimeException(e);
 			}
 		}).start();
-
+		
+		// Thread pra lidar com a conexão de dispositivos
 		new Thread(() -> {
 			try {
 				SocketServer.sendDeviceTCPConnection();
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}).start();

@@ -13,7 +13,7 @@ class Client:
         self.isConnected = False
         self.deviceIp = ""
 
-
+    # lida com a conexão TCP
     def handle_tcp_connection(self):   
         sock_tcp = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock_tcp.bind(("0.0.0.0", self.tcp_port))
@@ -40,7 +40,7 @@ class Client:
                 else:
                     self.device.handle_requests(data)
    
-
+    # envia uma me4nsagem UDP para informar que está "vivo"
     def send_alive_check(self, sock):
         while not self.isConnected:
             pass
@@ -55,7 +55,7 @@ class Client:
             finally:
                 sleep(3)
 
-
+    # manda mensagens UDP de maneira periódica contendo os dados e outras informações
     def send_response(self):
         client_sock_udp = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         threading.Thread(target=self.send_alive_check, args=(client_sock_udp,), name="alive_checker").start()
@@ -78,6 +78,7 @@ class Client:
                 elif not self.device.online:
                     response = f"type::data, ip::{self.deviceIp}, name::{self.device.name}, time::{time}, data::offline, status::offline"
 
+                    # última mensagem de dados quando fica offline
                     if not sent_off_message:
                         client_sock_udp.sendto(response.encode(), (self.ip, self.udp_port))
                     sent_off_message = True

@@ -8,7 +8,7 @@ class Device:
         self.online = True
 
 
-
+    # lida com os comandos
     def handle_requests(self, request):
         if not self.online:
             if request == "turn_on":

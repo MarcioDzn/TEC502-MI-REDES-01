@@ -18,6 +18,7 @@ class AirConditioner(Device):
         self.default_value = value
 
 
+    # conjunto de opções (ações) possíveis no dispositivo
     def get_options(self):
         while True:
             print("\n[1] Ligar dispositivo")
