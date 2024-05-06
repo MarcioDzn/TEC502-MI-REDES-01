@@ -48,7 +48,14 @@ class Client:
         while True:
             try:
                 time = utils.get_current_time()
-                response = f"type::alive_check, ip::{self.deviceIp}, name::{self.device.name}, time::{time}, data::none, status::online"
+                
+                status = ""
+                if (self.device.online):
+                    status = "online"
+                else:
+                    status = "offline"
+
+                response = f"type::alive_check, ip::{self.deviceIp}, name::{self.device.name}, time::{time}, data::none, status::{status}"
                 sock.sendto(response.encode(), (self.ip, self.udp_port))
             except:
                 print("\n[ERRO AO ENVIAR MENSAGEM DE VERIFICAÇÃO]")
