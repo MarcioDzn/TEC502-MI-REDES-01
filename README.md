@@ -143,6 +143,11 @@ Já a interface remota, desenvolvida como uma página web, assim como a interfac
 
 Outra ação importante que a interface remota garante é a "habilitação" do envio de mensagens pelo dispositivo. Assim que o dispositivo começa a executar, o seu parametro `isConnected` é setado como falso, indicando que o dispositivo não está conectado ao broker, impedindo-o de mandar dados. A interface gráfica remota permite que o dispositivo passe a ser conectado ao broker, setando `isConnected` para verdadeiro, permitindo o envio de mensagens.
 
+#### Threads
+Para que o dispositivo funcione corretamente, foi necessário executar algumas funções simultaneamente, sendo essencial o uso de threads.
+
+Nesse sentido, as funções `send_udp_message`, `handle_tcp_connection`, e `handle_requests` foram executadas em threads separadas. Dessa forma, a recepção de dados, o envio de informações e a interface local poderiam executar ao mesmo tempo.
+
 ### API
 #### Arquitetura
 Para construir a *API* utilizou-se o *framework SpringBoot*, em *Java*. Três camadas principais foram utilizadas para a organização, sendo elas: o *Controller*, o *Service* e o *Repository*.
@@ -192,6 +197,11 @@ A função `sendDeviceTCPConnection`, na classe `SocketServer` é responsável p
 
 #### Validação dos dispositivos
 Para identificar sensores que não estão mais enviando dados, devido a problemas de conexão, é utilizado o método `invalidateDeviceConnection`, na classe `DeviceRepository`. Esse método torna “desconectados” os sensores que pararam de enviar dados a mais de 6 segundos.
+
+#### Threads
+Para que o boker funcione corretamente, foi necessário executar algumas funções simultaneamente, sendo essencial o uso de threads.
+
+Nesse sentido, a execução da API é realizada simultaneamente ao recebimento e processamento de dados, bem como à verificação de sensores ativos. Dessa forma, as funções `StartServer`, `sendDeviceTCPConnection`, `invalidateDeviceConnection` e `receiveMessage` são executadas em threads separadas.  
 
 ### Comunicação
 #### Cliente para o Broker (API)
