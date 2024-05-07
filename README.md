@@ -6,7 +6,7 @@ A Internet das Coisas (IoT) permite a integração de dispositivos diversos, con
 
 Para que o projeto funcione corretamente, fez-se necessário utilizar determinados protocolos de comunicação, como UDP, TCP/IP e HTTP. A partir desses protocolos é possível estabelecer uma comunicação coerente e eficiente entre os elementos do sistema, como a interface, os dispositivos e o broker. O broker é o elemento central da aplicação, pois regula as comunicações com os dispositivos e a interface remota.
 
-O projeto foi desenvolvido a partir de ferramentas como: Java, para a criação do broker; Python, para a construção do dispositivo; React, para o desenvolvimento da interface; e Docker, para a execução dos módulos. Ademais, frameworks também foram utilizados, como Spring Boot, para a construção de APIs REST.
+O projeto foi desenvolvido a partir de ferramentas como: Java, para a criação do broker; Python, para a construção do dispositivo; React, para o desenvolvimento da interface; e Docker, para a execução dos módulos. 
 
 ### Tópicos
 - [Como executar?](#como-executar)
@@ -223,18 +223,59 @@ Nesse sentido, a execução da API é realizada simultaneamente ao recebimento e
 #### Cliente para o Broker (API)
 Para manipular o dispositivo de maneira remota fez-se necessário utilizar o protocolo *HTTP*, através de uma *API REST*. Dessa forma, a partir da *API* desenvolvida, é possível realizar a conexão com um dispositivo, a busca de dispositivos e o envio de comandos para os dispositivos.
 
-Para o seu desenvolvimento, utilizou-se o framework [Spring Boot](https://spring.io/projects/spring-boot), em Java, o qual permitiu a criação das rotas HTTP.
+Para acessar a *API* utiliza-se o endereço `http://<ip>:8080`, no qual `<ip>` refere-se ao endereço IP da máquina executando o broker.
 
-Já para realizar as requisições HTTP, utilizou-se as bibliotecas [TanStack Query](https://tanstack.com/query/latest) e [Axios](https://axios-http.com/ptbr/docs/intro).
+A fim de realizar as requisições *HTTP*, utilizou-se as bibliotecas [TanStack Query](https://tanstack.com/query/latest) e [Axios](https://axios-http.com/ptbr/docs/intro).
 
-##### Rotas
+#### Rotas
+
 ##### GET /api/sensor/
 
 Rota responsável por retornar uma lista de dados referentes a todos os dispositivos conectados ao broker.
+
+Resposta:
+- **Status**: 200 OK
+```
+{
+  "id": 1,
+  "name": "Temperatura2",
+  "ip": "172.16.103.8",
+  "time": "16:02:57",
+  "aliveTime": "16:02:57",
+  "data": "40°C",
+  "status": "online"
+}
+```
+
  
 ##### GET /api/sensor/:id
 
-Rota responsável por retornar os dados de um dispositivo em específico conectado ao broker, a partir de seu id.
+Rota responsável por retornar os dados de um dispositivo em específico conectado ao broker, a partir de seu id específico.
+
+Resposta:
+- **Status**: 200 OK
+```
+[
+  {
+    "id": 0,
+    "name": "Temperatura1",
+    "ip": "172.16.103.8",
+    "time": "16:00:28",
+    "aliveTime": "16:02:57",
+    "data": offline",
+    "status": "offline"
+  },
+  {
+    "id": 1,
+    "name": "Temperatura2",
+    "ip": "172.16.103.8",
+    "time": "16:02:57",
+    "aliveTime": "16:02:57",
+    "data": "40°C",
+    "status": "online"
+  }
+]
+```
 
 ##### POST /api/sensor/
 
@@ -248,9 +289,12 @@ Corpo da requisição:
 }
 ```
 
+Resposta:
+- **Status**: 201 CREATED
+
 ##### PATCH /api/sensor/:id
 
-Rota responsável por enviar um comando a um dispositivo em específico, já conectado ao broker.
+Rota responsável por enviar um comando a um dispositivo em específico já conectado ao broker, a partir de seu respectivo id.
 
 Corpo da requisição: 
 
@@ -259,6 +303,9 @@ Corpo da requisição:
     command: <comando>
 }
 ```
+
+Resposta:
+- **Status**: 200 OK
 
 #### Broker para o Dispositivo
 O envio de informações do Broker para os Dispositivos é realizada utilizando sockets, a partir do protocolo TCP/IP. A escolha desse protocolo deve-se a necessidade de um meio confiável de envio de informações, já que os dados sendo enviados são comandos, que não devem ser perdidos no meio do caminho.
