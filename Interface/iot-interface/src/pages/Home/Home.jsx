@@ -12,38 +12,7 @@ export function Home() {
 
     const {data: devices, isFetching, isError, refetch} = useQuery({
         queryKey: ["devices"],
-        queryFn: async () => {
-            try {
-                const brokerIp = localStorage.getItem("broker_ip");
-                const baseURL = `http://${brokerIp ? brokerIp : "localhost"}:8080`;
-            
-                const controller = new AbortController();
-                const signal = controller.signal;
-            
-                // Define o timeout para 8 segundos
-                const timeoutId = setTimeout(() => {
-                    controller.abort();
-                }, 8000);
-            
-                let response = await fetch(`${baseURL}/api/sensor`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    signal 
-                });
-            
-                clearTimeout(timeoutId); 
-            
-                response = await response.json();
-                setServerOnline(true);
-                return response;
-            
-            } catch (error) {
-                setServerOnline(false);
-                return [];
-            }
-        }
+        queryFn: () => getDevices(setServerOnline)
     })
 
     const {mutate: setOfflineMutation, isPending: isPendingOffline} = useMutation({
