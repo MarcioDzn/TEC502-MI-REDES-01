@@ -75,4 +75,9 @@ export const BrokerControlContainer = styled.div`
     align-items: center;
     justify-content: start;
     gap: 10px;
+
+    span {
+        font-size: 1.1rem !important;
+        font-weight: lighter !important;
+    }
 `

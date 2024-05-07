@@ -3,12 +3,6 @@ import axios from "axios";
 const brokerIp = localStorage.getItem("broker_ip");
 const baseURL = `http://${brokerIp ? brokerIp : "localhost"}:8080`
 
-export function getDevices() {
-    const response = axios.get(`${baseURL}/api/sensor`);
-
-    return response;
-}
-
 export function setDeviceOffline(id) {
     const body = {
         command: "turn_off"
