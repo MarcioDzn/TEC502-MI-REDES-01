@@ -3,7 +3,7 @@ import axios from "axios";
 const brokerIp = localStorage.getItem("broker_ip");
 const baseURL = `http://${brokerIp ? brokerIp : "localhost"}:8080`
 
-export async function getDevices(setServerOnline) {
+export async function getDevices(setServerOnline, setSelectSensorIndex) {
     try {
         const controller = new AbortController();
         const signal = controller.signal;
@@ -11,7 +11,7 @@ export async function getDevices(setServerOnline) {
         // se demorar 8 segundos dá erro
         const timeoutId = setTimeout(() => {
             controller.abort();
-        }, 8000);
+        }, 1000);
     
         let response = await fetch(`${baseURL}/api/sensor`, {
             method: 'GET',
@@ -29,7 +29,8 @@ export async function getDevices(setServerOnline) {
     
     // se der erro returna uma lista vazia e identifica o broker como offline
     } catch (error) {
-        setServerOnline(false);
+        setServerOnline(false)
+        setSelectSensorIndex(-1)
         return [];
     }
 }

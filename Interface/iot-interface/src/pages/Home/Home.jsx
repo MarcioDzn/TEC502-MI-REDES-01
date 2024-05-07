@@ -12,7 +12,7 @@ export function Home() {
 
     const {data: devices, isFetching, isError, refetch} = useQuery({
         queryKey: ["devices"],
-        queryFn: () => getDevices(setServerOnline)
+        queryFn: () => getDevices(setServerOnline, setSelectedSensorIndex)
     })
 
     const {mutate: setOfflineMutation, isPending: isPendingOffline} = useMutation({
