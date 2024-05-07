@@ -48,6 +48,6 @@ public class BrokerController {
     public ResponseEntity addDevice(@RequestBody DeviceModel device) {
         service.addDevice(device.getIp(), device.getPort());
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }
