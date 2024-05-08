@@ -357,7 +357,7 @@ Nesse sentido, as informações que podem ser enviadas ao broker são enviadas e
 | `"first_conn"`        | Inicia o envio de dados pelo dispositivo |
 
 <div align="center">
-  <p>Comandos enviados do broker para o dispositivo.</p>
+  <p>Comandos que o broker pode enviar para o dispositivo.</p>
 </div>
 
 ### Aplicação
