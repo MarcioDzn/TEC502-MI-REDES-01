@@ -329,6 +329,10 @@ Nesse sentido, os dados enviados a partir da string supracitada são:
 | `status`        | Status do dispositivo | "offline" ou "online" |
 
 
+<div align="center">
+  <p>Tipos de dados enviados por vez pelo dispositivo.</p>
+</div>
+
 Ademais, o dado enviado é **formatado** da seguinte maneira:
 ```bash
  "type::<tipo_de_pacote>, 
@@ -352,7 +356,9 @@ Nesse sentido, as informações que podem ser enviadas ao broker são enviadas e
 | `"turn_off"`       | Desliga o dispositivo                    |
 | `"first_conn"`        | Inicia o envio de dados pelo dispositivo |
 
-
+<div align="center">
+  <p>Comandos enviados do broker para o dispositivo.</p>
+</div>
 
 ### Aplicação
 Para permitir que o usuário manipule os dispositivos de maneira remota, foi desenvolvida uma aplicação. Essa aplicação é uma interface gráfica desenvolvida em *HTML*, *CSS* e *JavaScript*, utilizando o *framework ReactJS*.
