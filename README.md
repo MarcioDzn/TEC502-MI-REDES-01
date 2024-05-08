@@ -33,9 +33,10 @@ O projeto foi desenvolvido a partir de ferramentas como: Java, para a criação 
 - [Comunicação](#comunicação)
   - [Cliente para o Broker (API)](#cliente-para-o-broker-api)
     - [Rotas](#rotas)
-  - [Broker para o dispositivo](#broker-para-o-dispositivo)
-  - [Dispositivo para o broker](#dispositivo-para-o-broker)
-  - [Protocolos de comunicação](#dispositivo-para-o-broker)
+  - [Protocolos de comunicação - Transporte](#protocolos-de-comunicação---transporte)
+    - [Broker para o dispositivo](#broker-para-o-dispositivo)
+    - [Dispositivo para o broker](#dispositivo-para-o-broker)
+  - [Protocolos de comunicação - Aplicação](#protocolos-de-comunicação---aplicação)
     - [Dispositivo para o broker](#dispositivo-para-o-broker-1)
     - [Broker para o dispositivo](#dispositivo-para-o-broker-1)
 - [Interface gráfica](#interface-gráfica)
@@ -87,12 +88,12 @@ docker container run -it -p 3002:3002 -e BROKER_IP=<ip_do_broker> -e DEVICE_NAME
 ```
 
 ### Organização do Projeto
-O projeto é dividido em 3 pastas principais:
+O projeto é dividido em 3 componentes principais:
 - Dispositivo (Server)
     - Contém os arquivos referentes ao dispositivo, o qual simula um aparelho IoT real, desenvolvido em Python.
 - Broker (Broker)
     - Contém os arquivos referentes ao serviço de mensageria que possibilita a troca de mensagens entre a interface gráfica e o dispositivo.
-- Interface (Interface/iot-interface)
+- Aplicação (Interface/iot-interface)
     - Contém os arquivos referentes à interface gráfica, a qual permite a manipulação do dispositivo pelo usuário, de maneira remota.
 
 ### Dispositivo
@@ -149,7 +150,7 @@ A interface local do dispositivo, exibida no próprio terminal, permite que o us
   <br/> <em>Figura 2. Interface local.</em> <br/>
 </div>
 
-Já a interface remota, desenvolvida como uma página web, assim como a interface local também permite ligar e desligar o aparelho, não podendo alterar seu valor. 
+Já a aplicação, uma interface remota, desenvolvida como uma página web, assim como a interface local, também permite ligar e desligar o aparelho, não podendo alterar seu valor. 
 
 Outra ação importante que a interface remota garante é a "habilitação" do envio de mensagens pelo dispositivo. Assim que o dispositivo começa a executar, o seu parametro `isConnected` é setado como falso, indicando que o dispositivo não está conectado ao broker, impedindo-o de mandar dados. A interface gráfica remota permite que o dispositivo passe a ser conectado ao broker, setando `isConnected` para verdadeiro, permitindo o envio de mensagens.
 
@@ -234,18 +235,11 @@ A fim de realizar as requisições *HTTP*, utilizou-se as bibliotecas [TanStack 
 Rota responsável por retornar uma lista de dados referentes a todos os dispositivos conectados ao broker.
 
 Resposta:
-- **Status**: 200 OK
-```
-{
-  "id": 1,
-  "name": "Temperatura2",
-  "ip": "172.16.103.8",
-  "time": "16:02:57",
-  "aliveTime": "16:02:57",
-  "data": "40°C",
-  "status": "online"
-}
-```
+
+<div align="center">
+  <img src="media/resposta_get_all.png" alt="Interface gráfica do dispositivo" height="270px" width="auto" />
+  <br/> <em>Figura 4. Resposta da busca pelos dados de todos os dispositivos.</em> <br/>
+</div>
 
  
 ##### GET /api/sensor/:id
@@ -253,44 +247,29 @@ Resposta:
 Rota responsável por retornar os dados de um dispositivo em específico conectado ao broker, a partir de seu id específico.
 
 Resposta:
-- **Status**: 200 OK
-```
-[
-  {
-    "id": 0,
-    "name": "Temperatura1",
-    "ip": "172.16.103.8",
-    "time": "16:00:28",
-    "aliveTime": "16:02:57",
-    "data": offline",
-    "status": "offline"
-  },
-  {
-    "id": 1,
-    "name": "Temperatura2",
-    "ip": "172.16.103.8",
-    "time": "16:02:57",
-    "aliveTime": "16:02:57",
-    "data": "40°C",
-    "status": "online"
-  }
-]
-```
+
+<div align="center">
+  <img src="media/resposta_get_by_id.png" alt="Resposta da requisição" height="230px" width="auto" />
+  <br/> <em>Figura 4. Resposta da busca pelos dados de um dispositivo pelo seu id.</em> <br/>
+</div>
 
 ##### POST /api/sensor/
 
 Rota responsável por adicionar um novo dispositivo ao broker. O dispositivo deve estar previamente em execução.
 
 Corpo da requisição: 
-```
-{
-    ip: <ip_do_dispositivo>,
-    port: <porta_do_dispositivo>
-}
-```
+<div align="center">
+  <img src="media/requisicao_post_device.png" alt="Resposta da requisição" height="80px" width="auto" />
+  <br/> <em>Figura 5. Corpo da requisição da criação de um dispositivo.</em> <br/>
+</div>
 
 Resposta:
-- **Status**: 201 CREATED
+
+
+<div align="center">
+  <img src="media/resposta_post_device.png" alt="Resposta do post" height="34px" width="auto" />
+  <br/> <em>Figura 6. Resposta da criação de um dispositivo.</em> <br/>
+</div>
 
 ##### PATCH /api/sensor/:id
 
@@ -298,16 +277,20 @@ Rota responsável por enviar um comando a um dispositivo em específico já cone
 
 Corpo da requisição: 
 
-```
-{
-    command: <comando>
-}
-```
+<div align="center">
+  <img src="media/requisicao_patch_device.png" alt="Resposta da requisição" height="68px" width="auto" />
+  <br/> <em>Figura 7. Corpo da requisição para envio de comandos a um dispositivo.</em> <br/>
+</div>
 
 Resposta:
-- **Status**: 200 OK
 
-#### Broker para o Dispositivo
+<div align="center">
+  <img src="media/resposta_patch_device.png" alt="Resposta do post" height="34px" width="auto" />
+  <br/> <em>Figura 8. Resposta do envio de comandos a um dispositivo.</em> <br/>
+</div>
+
+#### Protocolos de comunicação - Transporte
+##### Broker para o Dispositivo
 O envio de informações do Broker para os Dispositivos é realizada utilizando sockets, a partir do protocolo TCP/IP. A escolha desse protocolo deve-se a necessidade de um meio confiável de envio de informações, já que os dados sendo enviados são comandos, que não devem ser perdidos no meio do caminho.
 
 No broker, a função responsável por realizar o envio de dados é a `sendMessageToClient`. Sempre que se deseja enviar um dado, uma conexão é aberta entre o broker e um dispositivo em específico, a partir de seu IP, na porta `3002`. Após o dado ser enviado com sucesso, a conexão é fechada apropriadamente. 
@@ -318,7 +301,7 @@ Em seguida, um objeto do tipo `DeviceModel` é criado, contendo as informações
 
 Já no dispositivo, um servidor socket TCP é aberto, no método `handle_tcp_connect`, a fim de realizar as devidas conexões, quando necessário. O IP utilizado é `"0.0.0.0"`, para aceitar conexões de qualquer endereço IP, e a porta, é fixa, sendo ela `3002`. Quando uma conexão TCP ocorre e uma mensagem é recebida e processada, a conexão logo é fechada.
 
-#### Dispositivo para o Broker
+##### Dispositivo para o Broker
 Para realizar o envio de dados do dispositivo para o broker utilizou-se um socket, a partir do protocolo UDP, conhecido por ser não confiável, mas rápido. A escolha desse protocolo deve-se ao fato de que os dados do dispositivos são enviados a todo momento, não representando grandes problemas se algumas informações forem perdidas.
 
 Por conta do tipo de protocolo, não é necessário estabelecer uma conexão entre o broker e o dispositivo. Dessa forma, os dados são simplesmente enviados, continuadamente, ao broker, a partir do IP da máquina que está executando-o, na porta `5000`.
@@ -331,19 +314,22 @@ Para receber os dados advindos dos dispositivos em execução, o Broker executa 
 
 O processamento e armazenamento de dados são realizados em threads. Dessa forma, para cada dado que chega, uma thread nova é criada. Isso permite que várias informaçõe sejam processadas ao mesmo tempo, sem gerar gargalos.
 
-#### Protocolos de comunicação
+#### Protocolos de comunicação - Aplicação
 ##### Dispositivo para o Broker
 A fim de realizar uma comunicação coerente entre o dispositivo e o broker, utilizou-se um padrão de mensagens. A informação enviada é uma string, que contém os dados necessários ao funcionamento da aplicação.
 
-Os campos supracitados são:
-- `type`: representa o tipo de pacote a ser enviado. Pode ser `"data"` ou `"alive_check"`.
-- `ip`: representa o ip da máquina que executa o dispositivo.
-- `name`: representa o nome do dispositivo.
-- `time`: representa o horário em que o dado foi “medido” e enviado pelo. dispositivo
-- `data`: representa o dado.
-- `status`: representa o status do dispositivo no momento do envio do dado, pode ser `“offline”` ou `“online”`.
+Nesse sentido, os dados enviados a partir da string supracitada são:
+| Tipo  | Descrição                                | Exemplo de conteúdo |
+| -------- | :--------------------------------        |  --------- |
+| `type`        | Tipo de pacote                       |  "data" ou "alive_check"  |
+| `ip`       |  Endereço IP da máquina que executa o dispositivo                    | 172.16.103.2   |
+| `name`        | Nome do dispositivo | Temperatura |
+| `time`        | Horário de envio do dado medido pelo dispositivo | 19:32:55|
+| `data`        | Dado medido | 20ºC |
+| `status`        | Status do dispositivo | "offline" ou "online" |
 
-Nesse sentido, a estrutura do dado enviado é:
+
+Ademais, o dado enviado é **formatado** da seguinte maneira:
 ```bash
  "type::<tipo_de_pacote>, 
   ip::<ip_do_dispositivo>, 
@@ -357,13 +343,19 @@ Nesse sentido, a estrutura do dado enviado é:
 ##### Broker para o dispositivo
 As informações enviadas pelo broker ao dispositivo se resumem a um único comando por vez, como "ligar", "desligar" e "iniciar execução".
 
-Nesse sentido, as informações que podem ser enviadas ao broker são enviadas em strings:
-- `"turn_on"`: responsável por ligar o dispositivo
-- `"turn_off"`: responsável por desligar o dispositivo
-- `"first_conn"`: responsável por iniciar o envio de dados do dispositivo para o broker.
+Nesse sentido, as informações que podem ser enviadas ao broker são enviadas em strings, que contém uma única palavra de comando.
 
-### Interface gráfica
-Para permitir que o usuário manipule os dispositivos de maneira remota, foi desenvolvida uma interface gráfica. Essa interface é um documento *web* desenvolvido em *HTML*, *CSS* e *JavaScript*, utilizando o *framework ReactJS*.
+
+| Comando  | Descrição                                |
+| -------- | --------------------------------        |
+| `"turn_on"`        | Liga o dispositivo                       |
+| `"turn_off"`       | Desliga o dispositivo                    |
+| `"first_conn"`        | Inicia o envio de dados pelo dispositivo |
+
+
+
+### Aplicação
+Para permitir que o usuário manipule os dispositivos de maneira remota, foi desenvolvida uma aplicação. Essa aplicação é uma interface gráfica desenvolvida em *HTML*, *CSS* e *JavaScript*, utilizando o *framework ReactJS*.
 
 A partir da interface é possível:
 - Adicionar o broker
@@ -374,16 +366,16 @@ A partir da interface é possível:
 
 <div align="center">
   <img src="media/interface_grafica_total.png" alt="Interface gráfica do dispositivo" height="300px" width="auto" />
-  <br/> <em>Figura 4. Visão geral da interface gráfica.</em> <br/>
+  <br/> <em>Figura 9. Visão geral da interface gráfica.</em> <br/>
 </div>
 
 
 #### Adicionar broker
-Para que a interface se comunique com o broker, é necessário adicionar o IP da máquina que está executando o broker. O campo de entrada para isso está localizando no canto superior esquerdo da tela.
+Para que a aplicação se comunique com o broker, é necessário adicionar o IP da máquina que está executando o broker. O campo de entrada para isso está localizando no canto superior esquerdo da tela.
 
 <div align="center">
   <img src="media/ativar_broker.png" alt="Campo para ativar broker" height="45px" width="auto" />
-  <br/> <em>Figura 5. Campo para adicionar o broker.</em> <br/>
+  <br/> <em>Figura 10. Campo para adicionar o broker.</em> <br/>
 </div>
 
 #### Adicionar dispositivo
@@ -393,7 +385,7 @@ Caso a máquina em questão não esteja executando o dispositivo, ou o IP seja i
 
 <div align="center">
   <img src="media/adicionar_dispositivo.png" alt="Campo para adicionar dispositivo" height="60px" width="auto" />
-  <br/> <em>Figura 6. Campo para adicionar um dispositivo.</em> <br/>
+  <br/> <em>Figura 11. Campo para adicionar um dispositivo.</em> <br/>
 </div>
 
 #### Ligar/Desligar dispositivo
@@ -405,17 +397,17 @@ Se o botão estiver desabilitado o dispositivo não está em execução ou a con
 
 <div align="center">
   <img src="media/power_ligado.png" alt="DIspositivo ligado" height="200px" width="auto" />
-  <br/> <em>Figura 7. Dispositivo ligado.</em> <br/> <br/>
+  <br/> <em>Figura 12. Dispositivo ligado.</em> <br/> <br/>
 </div>
 
 <div align="center">
   <img src="media/power_desligado.png" alt="Dispositivo desligado" height="200px" width="auto" />
-  <br/> <em>Figura 8. Dispositivo desligado.</em> <br/> <br/>
+  <br/> <em>Figura 13. Dispositivo desligado.</em> <br/> <br/>
 </div>
 
 <div align="center">
   <img src="media/power_desconectado.png" alt="Dispositivo desconectado" height="193px" width="auto" />
-  <br/> <em>Figura 9. Dispositivo desconectado.</em> <br/> <br/>
+  <br/> <em>Figura 14. Dispositivo desconectado.</em> <br/> <br/>
 </div>
 
 
@@ -444,7 +436,7 @@ Quando o cabo é reconectado, as informações voltam a chegar normalmente, e os
 
 
 ### Conclusão
-O sistema cumpre com os requisitos propostos, sendo capaz de utilizar protocolos de comunicação adequados para cada situação. Nesse sentido, por meio da utilização de uma API REST, com o protocolo HTTP, é possível que o cliente comunique-se com o broker adequadamente. Ademais, a partir do uso dos protocolos UDP e TCP/IP, a comunicação entre o broker e os dispositivos é garantida.
+O sistema cumpre com os requisitos propostos, sendo capaz de utilizar protocolos de comunicação adequados para cada situação. Nesse sentido, por meio da utilização de uma *API REST*, com o protocolo *HTTP*, é possível que o cliente comunique-se com o broker adequadamente. Ademais, a partir do uso dos protocolos *UDP* e *TCP/IP*, a comunicação entre o broker e os dispositivos é garantida.
 
 Além disso, o sistema lida com situações de erro relacionado à falha na rede, o qual impacta a comunicação. Dessa forma, caso o cabo de rede seja desconectado, o sistema aguarda até a reconexão para que as comunicações voltem a funcionar.
 
