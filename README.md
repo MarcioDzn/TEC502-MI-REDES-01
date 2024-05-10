@@ -33,13 +33,13 @@ O projeto foi desenvolvido a partir de ferramentas como: Java, para a criação 
 - [Comunicação](#comunicação)
   - [Cliente para o Broker (API)](#cliente-para-o-broker-api)
     - [Rotas](#rotas)
-  - [Protocolos de comunicação - Transporte](#protocolos-de-comunicação---transporte)
-    - [Broker para o dispositivo](#broker-para-o-dispositivo)
-    - [Dispositivo para o broker](#dispositivo-para-o-broker)
   - [Protocolos de comunicação - Aplicação](#protocolos-de-comunicação---aplicação)
+    - [Dispositivo para o broker](#dispositivo-para-o-broker)
+    - [Broker para o dispositivo](#dispositivo-para-o-broker)
+  - [Protocolos de comunicação - Transporte](#protocolos-de-comunicação---transporte)
     - [Dispositivo para o broker](#dispositivo-para-o-broker-1)
-    - [Broker para o dispositivo](#dispositivo-para-o-broker-1)
-- [Interface gráfica](#interface-gráfica)
+    - [Broker para o dispositivo](#broker-para-o-dispositivo-1)
+- [Aplicação (Interface Gráfica)](#aplicação-interface-gráfica)
   - [Adicionar Broker](#adicionar-broker)
   - [Adicionar dispositivo](#adicionar-dispositivo)
   - [Adicionar Broker](#adicionar-broker)
@@ -289,30 +289,6 @@ Resposta:
   <br/> <em>Figura 8. Resposta do envio de comandos a um dispositivo.</em> <br/>
 </div>
 
-#### Protocolos de comunicação - Transporte
-##### Broker para o Dispositivo
-O envio de informações do Broker para os Dispositivos é realizada utilizando sockets, a partir do protocolo TCP/IP. A escolha desse protocolo deve-se a necessidade de um meio confiável de envio de informações, já que os dados sendo enviados são comandos, que não devem ser perdidos no meio do caminho.
-
-No broker, a função responsável por realizar o envio de dados é a `sendMessageToClient`. Sempre que se deseja enviar um dado, uma conexão é aberta entre o broker e um dispositivo em específico, a partir de seu IP, na porta `3002`. Após o dado ser enviado com sucesso, a conexão é fechada apropriadamente. 
-
-Para estabelecer a comunicação TCP com um dispositivo em específico é necessário utilizar a rota `POST /api/sensor/`, com o corpo adequado, contendo o IP e a porta da máquina cujo dispositivo se encontra em execução. 
-
-Em seguida, um objeto do tipo `DeviceModel` é criado, contendo as informações de IP e porta. Esse objeto é adicionado ao hashmap `DevicesRepository`, cuja chave é o IP do dispositivo e o conteúdo é o objeto do tipo `DeviceModel`.
-
-Já no dispositivo, um servidor socket TCP é aberto, no método `handle_tcp_connect`, a fim de realizar as devidas conexões, quando necessário. O IP utilizado é `"0.0.0.0"`, para aceitar conexões de qualquer endereço IP, e a porta, é fixa, sendo ela `3002`. Quando uma conexão TCP ocorre e uma mensagem é recebida e processada, a conexão logo é fechada.
-
-##### Dispositivo para o Broker
-Para realizar o envio de dados do dispositivo para o broker utilizou-se um socket, a partir do protocolo UDP, conhecido por ser não confiável, mas rápido. A escolha desse protocolo deve-se ao fato de que os dados do dispositivos são enviados a todo momento, não representando grandes problemas se algumas informações forem perdidas.
-
-Por conta do tipo de protocolo, não é necessário estabelecer uma conexão entre o broker e o dispositivo. Dessa forma, os dados são simplesmente enviados, continuadamente, ao broker, a partir do IP da máquina que está executando-o, na porta `5000`.
-
-Dois tipos de informação são enviados, uma contendo os dados "medidos" pelo dispositivo e outra contendo um aviso de atividade. O aviso de atividade é útil para informar ao broker que o dispositivo ainda está ativo. Ademais, a informação de dados é enviada a 0.5 segundo e a de aviso de atividade a cada 3 segundos.
-
-Quando o dispositivo se torna offline, a transmissão periódica de informações de dados cessa. Entretanto, os as informações do tipo de aviso de atividade permanecem sendo enviados.
-
-Para receber os dados advindos dos dispositivos em execução, o Broker executa um loop ininterruptamente, na função `receiveMessage`. Sempre que um dado novo chega, através de um socket, suas informações são tratadas e armazenadas adequadamente.
-
-O processamento e armazenamento de dados são realizados em threads. Dessa forma, para cada dado que chega, uma thread nova é criada. Isso permite que várias informaçõe sejam processadas ao mesmo tempo, sem gerar gargalos.
 
 #### Protocolos de comunicação - Aplicação
 ##### Dispositivo para o Broker
@@ -343,11 +319,17 @@ Ademais, o dado enviado é **formatado** da seguinte maneira:
   status::<status>"
 ```
 
+Dois tipos de informação são enviados, uma contendo os dados `"medidos"` pelo dispositivo, "data", e outra contendo um aviso de atividade, `"alive_check"`. O aviso de atividade é útil para informar ao broker que o dispositivo ainda está ativo. Ademais, a informação de dados é enviada a cada 0.5 segundo e a de aviso de atividade a cada 3 segundos. 
+
+Quando o dispositivo se torna offline, a transmissão periódica de informações de dados cessa. Entretanto, as informações do tipo de aviso de atividade permanecem sendo enviados.
+
+Para receber os dados advindos dos dispositivos em execução, o Broker executa um loop ininterruptamente, na função `receiveMessage`. Sempre que um dado novo chega, através de um socket, suas informações são tratadas e armazenadas adequadamente. Essa recepção de dados ocorre na porta `5000`. 
+
 
 ##### Broker para o dispositivo
 As informações enviadas pelo broker ao dispositivo se resumem a um único comando por vez, como "ligar", "desligar" e "iniciar execução".
 
-Nesse sentido, as informações que podem ser enviadas ao broker são enviadas em strings, que contém uma única palavra de comando.
+Nesse sentido, os dados que podem ser enviadas ao broker são enviadas em strings, que contém uma única palavra de comando.
 
 
 | Comando  | Descrição                                |
@@ -360,7 +342,37 @@ Nesse sentido, as informações que podem ser enviadas ao broker são enviadas e
   <p>Comandos que o broker pode enviar para o dispositivo.</p>
 </div>
 
-### Aplicação
+No broker, a função responsável por realizar o envio de dados é a `sendMessageToClient`. Sempre que se deseja enviar um dado, uma conexão é aberta entre o broker e um dispositivo em específico, a partir de seu IP, na porta `3002`. Após o dado ser enviado com sucesso, a conexão é fechada apropriadamente. 
+
+Para estabelecer a comunicação TCP com um dispositivo em específico é necessário utilizar a rota `POST /api/sensor/`, com o corpo adequado, contendo o IP e a porta da máquina cujo dispositivo se encontra em execução. 
+
+Em seguida, um objeto do tipo `DeviceModel` é criado, contendo as informações de IP e porta. Esse objeto é adicionado ao hashmap `DevicesRepository`, cuja chave é o IP do dispositivo e o conteúdo é o objeto do tipo `DeviceModel`.
+
+Já no dispositivo, um servidor socket TCP é aberto, no método `handle_tcp_connect`, a fim de realizar as devidas conexões, quando necessário. O IP utilizado é `"0.0.0.0"`, para aceitar conexões de qualquer endereço IP e a porta é fixa, sendo ela `3002`. Quando uma conexão TCP ocorre e uma mensagem é recebida e processada, a conexão logo é fechada.
+
+
+#### Protocolos de comunicação - Transporte
+<div align="center">
+  <img src="media/broker-device.png" alt="Comunicação entre o dispositivo e o broker" height="300px" width="auto" />
+  <br/> <em>Figura 9. Comunicação entre o dispositivo e o broker.</em> <br/>
+</div>
+
+##### Dispositivo para o Broker
+Para realizar o envio de informações do dispositivo para o broker utilizou-se um socket, a partir do protocolo *UDP*, conhecido por ser não confiável, mas rápido. A escolha desse protocolo deve-se ao fato de que os dados do dispositivos são enviados a todo momento, não representando grandes problemas se algumas informações forem perdidas.
+  
+Dessa forma, tanto o envio de dados medidos quanto o envio da verificação de atividade do dispositivo são realizados via protocolo UDP.
+
+Por conta do tipo de protocolo, não é necessário estabelecer uma conexão entre o broker e o dispositivo. Dessa forma, os dados são simplesmente enviados, continuadamente, ao broker.
+
+
+##### Broker para o Dispositivo
+O envio de informações do Broker para os dispositivos é realizada utilizando sockets, a partir do protocolo *TCP/IP*. A escolha desse protocolo deve-se a necessidade de um meio confiável de envio de informações, ainda que não o mais rápido. Nesse sentido, seu uso deriva do fato que os dados sendo transportados são comandos, os quais não devem ser perdidos no meio do caminho.
+
+
+
+
+
+### Aplicação (Interface Gráfica)
 Para permitir que o usuário manipule os dispositivos de maneira remota, foi desenvolvida uma aplicação. Essa aplicação é uma interface gráfica desenvolvida em *HTML*, *CSS* e *JavaScript*, utilizando o *framework ReactJS*.
 
 A partir da interface é possível:
@@ -372,7 +384,7 @@ A partir da interface é possível:
 
 <div align="center">
   <img src="media/interface_grafica_total.png" alt="Interface gráfica do dispositivo" height="300px" width="auto" />
-  <br/> <em>Figura 9. Visão geral da interface gráfica.</em> <br/>
+  <br/> <em>Figura 10. Visão geral da interface gráfica.</em> <br/>
 </div>
 
 
@@ -381,7 +393,7 @@ Para que a aplicação se comunique com o broker, é necessário adicionar o IP 
 
 <div align="center">
   <img src="media/ativar_broker.png" alt="Campo para ativar broker" height="45px" width="auto" />
-  <br/> <em>Figura 10. Campo para adicionar o broker.</em> <br/>
+  <br/> <em>Figura 11. Campo para adicionar o broker.</em> <br/>
 </div>
 
 #### Adicionar dispositivo
@@ -391,7 +403,7 @@ Caso a máquina em questão não esteja executando o dispositivo, ou o IP seja i
 
 <div align="center">
   <img src="media/adicionar_dispositivo.png" alt="Campo para adicionar dispositivo" height="60px" width="auto" />
-  <br/> <em>Figura 11. Campo para adicionar um dispositivo.</em> <br/>
+  <br/> <em>Figura 12. Campo para adicionar um dispositivo.</em> <br/>
 </div>
 
 #### Ligar/Desligar dispositivo
@@ -403,17 +415,17 @@ Se o botão estiver desabilitado o dispositivo não está em execução ou a con
 
 <div align="center">
   <img src="media/power_ligado.png" alt="DIspositivo ligado" height="200px" width="auto" />
-  <br/> <em>Figura 12. Dispositivo ligado.</em> <br/> <br/>
+  <br/> <em>Figura 13. Dispositivo ligado.</em> <br/> <br/>
 </div>
 
 <div align="center">
   <img src="media/power_desligado.png" alt="Dispositivo desligado" height="200px" width="auto" />
-  <br/> <em>Figura 13. Dispositivo desligado.</em> <br/> <br/>
+  <br/> <em>Figura 14. Dispositivo desligado.</em> <br/> <br/>
 </div>
 
 <div align="center">
   <img src="media/power_desconectado.png" alt="Dispositivo desconectado" height="193px" width="auto" />
-  <br/> <em>Figura 14. Dispositivo desconectado.</em> <br/> <br/>
+  <br/> <em>Figura 15. Dispositivo desconectado.</em> <br/> <br/>
 </div>
 
 
