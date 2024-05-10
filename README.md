@@ -344,9 +344,7 @@ Nesse sentido, os dados que podem ser enviadas ao broker são enviadas em string
 
 No broker, a função responsável por realizar o envio de dados é a `sendMessageToClient`. Sempre que se deseja enviar um dado, uma conexão é aberta entre o broker e um dispositivo em específico, a partir de seu IP, na porta `3002`. Após o dado ser enviado com sucesso, a conexão é fechada apropriadamente. 
 
-Para estabelecer a comunicação TCP com um dispositivo em específico é necessário utilizar a rota `POST /api/sensor/`, com o corpo adequado, contendo o IP e a porta da máquina cujo dispositivo se encontra em execução. 
-
-Em seguida, um objeto do tipo `DeviceModel` é criado, contendo as informações de IP e porta. Esse objeto é adicionado ao hashmap `DevicesRepository`, cuja chave é o IP do dispositivo e o conteúdo é o objeto do tipo `DeviceModel`.
+Para estabelecer a primeira comunicação TCP com um dispositivo em específico é necessário utilizar a rota `POST /api/sensor/`, com o corpo adequado, contendo o IP e a porta da máquina cujo dispositivo se encontra em execução. 
 
 Já no dispositivo, um servidor socket TCP é aberto, no método `handle_tcp_connect`, a fim de realizar as devidas conexões, quando necessário. O IP utilizado é `"0.0.0.0"`, para aceitar conexões de qualquer endereço IP e a porta é fixa, sendo ela `3002`. Quando uma conexão TCP ocorre e uma mensagem é recebida e processada, a conexão logo é fechada.
 
@@ -414,7 +412,7 @@ Caso o botão esteja verde, o dispositivo está ligado, e poderá ser desligado 
 Se o botão estiver desabilitado o dispositivo não está em execução ou a conexão foi perdida, e nada poderá ser feito até que esteja executando ou conectado novamente.
 
 <div align="center">
-  <img src="media/power_ligado.png" alt="DIspositivo ligado" height="200px" width="auto" />
+  <img src="media/power_ligado.png" alt="Dispositivo ligado" height="200px" width="auto" />
   <br/> <em>Figura 13. Dispositivo ligado.</em> <br/> <br/>
 </div>
 
