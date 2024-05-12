@@ -147,7 +147,7 @@ A interface local do dispositivo, exibida no próprio terminal, permite que o us
 
 <div align="center">
   <img src="media/interface_local.png" alt="Interface local do dispositivo" height="100px" width="auto" />
-  <br/> <em>Figura 2. Interface local.</em> <br/>
+  <br/> <em>Figura 2. Interface local.</em> <br/><br/>
 </div>
 
 Já a aplicação, uma interface remota, desenvolvida como uma página web, assim como a interface local, também permite ligar e desligar o aparelho, não podendo alterar seu valor. 
